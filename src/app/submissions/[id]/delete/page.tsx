@@ -31,10 +31,10 @@ export default async function DeleteSubmissionPage({ params }: Props) {
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/logout">
-            <button type="submit" style={{padding:'6px 10px'}}>Log out</button>
+            <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action="/submissions">
-            <button type="submit" style={{padding:'6px 10px'}}>Back to My Submissions</button>
+            <button type="submit" className="btn">Back to My Submissions</button>
           </form>
         </div>
         <div style={{color:'#555'}}>
@@ -47,10 +47,10 @@ export default async function DeleteSubmissionPage({ params }: Props) {
 
       <div style={{display:'flex', gap:8, marginTop:12}}>
         <form method="post" action={`/api/submissions/${sub.id}?_method=DELETE`}>
-          <button type="submit" style={{padding:'6px 10px'}}>Yes, delete</button>
+          <button type="submit" className="btn">Yes, delete</button>
         </form>
         <form method="get" action="/submissions">
-          <button type="submit" style={{padding:'6px 10px'}}>Cancel</button>
+          <button type="submit" className="btn">Cancel</button>
         </form>
       </div>
     </main>

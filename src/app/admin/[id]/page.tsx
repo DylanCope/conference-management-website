@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import prisma from '../../../lib/prisma'
+import ProcessItemsEditor from '../ProcessItemsEditor'
 
 async function getCurrentUser() {
   const cookieStore = await cookies()
@@ -15,11 +16,12 @@ async function getCurrentUser() {
   }
 }
 
-type Props = { params: { id: string } }
+type Props = { params: Promise<{ id: string }> }
 
 export default async function EditConferencePage({ params }: Props) {
   const user = await getCurrentUser()
-  const id = Number(params.id)
+  const { id: idStr } = await params
+  const id = Number(idStr)
   const conf = await prisma.conference.findUnique({ where: { id } })
 
   if (!conf) {
@@ -36,10 +38,10 @@ export default async function EditConferencePage({ params }: Props) {
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/logout">
-            <button type="submit" style={{padding:'6px 10px'}}>Log out</button>
+            <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action="/admin">
-            <button type="submit" style={{padding:'6px 10px'}}>Manage Conferences</button>
+            <button type="submit" className="btn">Manage Conferences</button>
           </form>
         </div>
         <div style={{color:'#555'}}>
@@ -65,9 +67,12 @@ export default async function EditConferencePage({ params }: Props) {
         <input name="conferenceDate" type="date" defaultValue={toInputDate(conf.conferenceDate)} />
 
         <div style={{marginTop:12}}>
-          <button type="submit">Save</button>
+          <button type="submit" className="btn">Save</button>
         </div>
       </form>
+
+  {/* Process items editor (UI only for now) */}
+  <ProcessItemsEditor conferenceId={conf.id} />
     </main>
   )
 }

@@ -15,11 +15,12 @@ async function getCurrentUser() {
   }
 }
 
-type Props = { params: { id: string } }
+type Props = { params: Promise<{ id: string }> }
 
 export default async function DeleteConferencePage({ params }: Props) {
   const user = await getCurrentUser()
-  const id = Number(params.id)
+  const { id: idStr } = await params
+  const id = Number(idStr)
   const conf = await prisma.conference.findUnique({ where: { id } })
 
   if (!conf) {
@@ -34,10 +35,10 @@ export default async function DeleteConferencePage({ params }: Props) {
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/logout">
-            <button type="submit" style={{padding:'6px 10px'}}>Log out</button>
+            <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action="/admin">
-            <button type="submit" style={{padding:'6px 10px'}}>Manage Conferences</button>
+            <button type="submit" className="btn">Manage Conferences</button>
           </form>
         </div>
         <div style={{color:'#555'}}>
@@ -50,10 +51,10 @@ export default async function DeleteConferencePage({ params }: Props) {
 
       <div style={{display:'flex', gap:8, marginTop:12}}>
         <form method="post" action={`/api/conferences/${conf.id}?_method=DELETE`}>
-          <button type="submit" style={{padding:'6px 10px'}}>Yes, delete</button>
+          <button type="submit" className="btn">Yes, delete</button>
         </form>
         <form method="get" action="/admin">
-          <button type="submit" style={{padding:'6px 10px'}}>Cancel</button>
+          <button type="submit" className="btn">Cancel</button>
         </form>
       </div>
     </main>

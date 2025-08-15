@@ -29,11 +29,11 @@ export default async function SubmissionsPage(){
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/logout">
-            <button type="submit" style={{padding:'6px 10px'}}>Log out</button>
+            <button type="submit" className="btn">Log out</button>
           </form>
           {user?.isAdmin && (
             <form method="get" action="/admin">
-              <button type="submit" style={{padding:'6px 10px'}}>Manage Conferences</button>
+              <button type="submit" className="btn">Manage Conferences</button>
             </form>
           )}
         </div>
@@ -60,10 +60,10 @@ export default async function SubmissionsPage(){
                 </div>
                 <div style={{display:'flex', gap:8, marginTop:8}}>
                   <form method="get" action={`/submissions/${s.id}`}>
-                    <button type="submit" style={{padding:'6px 10px'}}>Edit</button>
+                    <button type="submit" className="btn">Edit</button>
                   </form>
                   <form method="get" action={`/submissions/${s.id}/delete`}>
-                    <button type="submit" style={{padding:'6px 10px'}}>Delete</button>
+                    <button type="submit" className="btn">Delete</button>
                   </form>
                 </div>
               </li>

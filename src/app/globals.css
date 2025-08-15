@@ -6,3 +6,33 @@ html, body {
 	height: 100%;
 }
 
+/* Simple, consistent button styling (Google Forms–like) */
+:root {
+	--btn-bg: #f7f7f7;
+	--btn-bg-hover: #f1f1f1;
+	--btn-border: #ddd;
+	--btn-text: #111;
+	--btn-radius: 6px;
+}
+
+.btn {
+	display: inline-block;
+	padding: 6px 10px;
+	border: 1px solid var(--btn-border);
+	border-radius: var(--btn-radius);
+	background: var(--btn-bg);
+	color: var(--btn-text);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.btn:hover {
+	background: var(--btn-bg-hover);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+

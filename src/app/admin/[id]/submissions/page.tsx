@@ -15,11 +15,12 @@ async function getCurrentUser() {
   }
 }
 
-type Props = { params: { id: string } }
+type Props = { params: Promise<{ id: string }> }
 
 export default async function ConferenceSubmissionsPage({ params }: Props) {
   const user = await getCurrentUser()
-  const id = Number(params.id)
+  const { id: idStr } = await params
+  const id = Number(idStr)
   const conf = await prisma.conference.findUnique({ where: { id } })
   const submissions = await prisma.submission.findMany({ where: { conferenceId: id }, include: { user: true }, orderBy: { createdAt: 'desc' } })
 
@@ -35,10 +36,10 @@ export default async function ConferenceSubmissionsPage({ params }: Props) {
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/logout">
-            <button type="submit" style={{padding:'6px 10px'}}>Log out</button>
+            <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action="/admin">
-            <button type="submit" style={{padding:'6px 10px'}}>Manage Conferences</button>
+            <button type="submit" className="btn">Manage Conferences</button>
           </form>
         </div>
         <div style={{color:'#555'}}>
@@ -60,7 +61,7 @@ export default async function ConferenceSubmissionsPage({ params }: Props) {
                 </div>
                 <div style={{display:'flex', gap:8, marginTop:8}}>
                   <form method="get" action={`/submissions/${s.id}`}>
-                    <button type="submit" style={{padding:'6px 10px'}}>View/Edit</button>
+                    <button type="submit" className="btn">View/Edit</button>
                   </form>
                 </div>
               </li>

@@ -1,0 +1,64 @@
+import Link from 'next/link'
+import { cookies } from 'next/headers'
+
+export default async function NewProcessItemPage({ params }: { params: Promise<{ id: string }> }) {
+  const cookieStore = await cookies()
+  const userEmail = (() => {
+    try { return JSON.parse(cookieStore.get('session')?.value || '{}').email as string } catch { return undefined }
+  })()
+  const { id: idStr } = await params
+  const confId = Number(idStr)
+
+  return (
+    <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <form method="post" action="/api/logout">
+            <button type="submit" className="btn">Log out</button>
+          </form>
+          <form method="get" action={`/admin/${confId}`}>
+            <button type="submit" className="btn">Back to Conference</button>
+          </form>
+        </div>
+        <div style={{ color: '#555' }}>{userEmail ?? 'Not signed in'}</div>
+      </div>
+
+      <h1 style={{ fontSize: 24 }}>New Process Item</h1>
+      <p style={{ color: '#666', marginTop: 4 }}>Create a process item with full details.</p>
+
+      <form method="post" action={`#`} style={{ maxWidth: 700, marginTop: 12 }}>
+        <label style={{ display: 'block', marginBottom: 6 }}>Title</label>
+        <input name="title" placeholder="e.g., Internal review" style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+
+        <label style={{ display: 'block', marginTop: 10 }}>Description</label>
+        <textarea name="description" placeholder="Optional longer description or checklist" rows={4} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+
+        <label style={{ display: 'block', marginTop: 10 }}>Owner/Lead</label>
+        <input name="owner" placeholder="Optional, e.g., Project lead" style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+
+        <label style={{ display: 'block', marginTop: 10 }}>Due (relative days before abstract deadline)</label>
+        <input type="number" name="dueDaysBeforeAbstract" placeholder="e.g., 14" style={{ width: 200, padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+
+        <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+          <button type="submit" className="btn">Save</button>
+          <Link
+            href={`/admin/${confId}`}
+            style={{
+              padding: '6px 10px',
+              border: '1px solid #ddd',
+              borderRadius: 4,
+              textDecoration: 'none',
+              background: '#f7f7f7',
+              color: '#111',
+              display: 'inline-block',
+            }}
+          >
+            Cancel
+          </Link>
+        </div>
+      </form>
+
+      <div style={{ marginTop: 8, color: '#888', fontSize: 12 }}>Saving is not wired yet. This page is a placeholder for full details.</div>
+    </main>
+  )
+}

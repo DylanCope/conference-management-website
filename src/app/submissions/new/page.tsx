@@ -26,7 +26,7 @@ export default async function NewSubmissionPage(){
         </select>
 
         <div style={{marginTop:12}}>
-          <button type="submit" disabled={!hasConfs}>Create</button>
+          <button type="submit" className="btn" disabled={!hasConfs} aria-disabled={!hasConfs}>Create</button>
         </div>
       </form>
     </main>

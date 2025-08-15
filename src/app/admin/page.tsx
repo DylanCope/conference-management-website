@@ -31,10 +31,10 @@ export default async function AdminPage() {
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/logout">
-            <button type="submit" style={{padding:'6px 10px'}}>Log out</button>
+            <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action="/submissions">
-            <button type="submit" style={{padding:'6px 10px'}}>My Submissions</button>
+            <button type="submit" className="btn">My Submissions</button>
           </form>
         </div>
         <div style={{color:'#555'}}>
@@ -65,13 +65,13 @@ export default async function AdminPage() {
                 )}
                 <div style={{display:'flex', gap:8, marginTop:8}}>
                   <form method="get" action={`/admin/${c.id}/submissions`}>
-                    <button type="submit" style={{padding:'6px 10px'}}>View Submissions</button>
+                    <button type="submit" className="btn">View Submissions</button>
                   </form>
                   <form method="get" action={`/admin/${c.id}`}>
-                    <button type="submit" style={{padding:'6px 10px'}}>Edit</button>
+                    <button type="submit" className="btn">Edit</button>
                   </form>
                   <form method="get" action={`/admin/${c.id}/delete`}>
-                    <button type="submit" style={{padding:'6px 10px'}}>Delete</button>
+                    <button type="submit" className="btn">Delete</button>
                   </form>
                 </div>
               </li>

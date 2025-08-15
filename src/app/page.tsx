@@ -17,7 +17,7 @@ export default function Home() {
           style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }}
         />
         <div style={{ marginTop: 12 }}>
-          <button type="submit" style={{ padding: '8px 12px' }}>Continue</button>
+          <button type="submit" className="btn">Continue</button>
         </div>
       </form>
     </main>

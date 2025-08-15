@@ -32,10 +32,10 @@ export default async function SubmissionDetailPage({ params }: Props){
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/logout">
-            <button type="submit" style={{padding:'6px 10px'}}>Log out</button>
+            <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action="/submissions">
-            <button type="submit" style={{padding:'6px 10px'}}>Back to Conference Submissions</button>
+            <button type="submit" className="btn">Back to Submissions</button>
           </form>
         </div>
         <div style={{color:'#555'}}>{user?.email ?? 'Not signed in'}</div>
@@ -64,7 +64,7 @@ export default async function SubmissionDetailPage({ params }: Props){
         <input name="overleaf" defaultValue={sub.overleaf ?? ''} style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}} />
 
         <div style={{marginTop:12}}>
-          <button type="submit">Save</button>
+          <button type="submit" className="btn">Save</button>
         </div>
       </form>
     </main>
