@@ -16,9 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!session) return res.status(401).json({ error: 'Not logged in' })
 
   if (req.method === 'POST') {
-    const { title } = req.body
-    const sub = await prisma.submission.create({ data: { title, userId: session.userId } })
-    return res.redirect('/submissions')
+    const { title, conferenceId } = req.body as { title?: string; conferenceId?: string }
+    const confIdNum = conferenceId ? Number(conferenceId) : undefined
+    await prisma.submission.create({ data: { title: title || '', userId: session.userId, conferenceId: confIdNum } })
+    return res.redirect(303, '/submissions')
   }
 
   res.status(405).end()

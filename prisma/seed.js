@@ -6,7 +6,8 @@ async function main() {
     'admin@example.com'
   ]
 
-  for (const email of adminEmails) {
+  for (let email of adminEmails) {
+    email = String(email).trim().toLowerCase()
     await prisma.user.upsert({
       where: { email },
       update: { isAdmin: true },
