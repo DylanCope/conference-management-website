@@ -17,10 +17,10 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
     if (initialItems.length > 0) return initialItems
     // Starter seed just for UI demonstration
     return [
-      { id: 'seed-0', title: 'Step 0 — Define goal and present to group' },
-      { id: 'seed-1', title: 'Check-in 1 — Intro + Methods written' },
-      { id: 'seed-2', title: 'Check-in 2 — First full draft + paper clinic' },
-      { id: 'seed-3', title: 'Check-in 3 — Internal reviews x2' },
+    //   { id: 'seed-0', title: 'Step 0 — Define goal and present to group' },
+    //   { id: 'seed-1', title: 'Check-in 1 — Intro + Methods written' },
+    //   { id: 'seed-2', title: 'Check-in 2 — First full draft + paper clinic' },
+    //   { id: 'seed-3', title: 'Check-in 3 — Internal reviews x2' },
     ]
   }, [initialItems])
 
@@ -28,8 +28,10 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editTitle, setEditTitle] = useState('')
   const [draggingId, setDraggingId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   function startEdit(id: string, title: string) {
+    const isPersisted = /^\d+$/.test(id)
     setEditingId(id)
     setEditTitle(title)
   }
@@ -46,7 +48,25 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
     setEditingId(null)
     setEditTitle('')
   }
-  function removeItem(id: string) {
+  async function removeItem(id: string) {
+    const isPersisted = /^\d+$/.test(id)
+    if (isPersisted) {
+      const yes = window.confirm('Delete this process item? This will also delete its tasks and questions.')
+      if (!yes) return
+      try {
+        setDeletingId(id)
+        const res = await fetch(`/api/process-items/${id}`, { method: 'DELETE' })
+        if (!res.ok) {
+          const msg = await res.text()
+          throw new Error(msg || 'Failed to delete')
+        }
+      } catch (e: any) {
+        alert(e?.message || 'Failed to delete')
+        setDeletingId(null)
+        return
+      }
+      setDeletingId(null)
+    }
     setItems(prev => prev.filter(it => it.id !== id))
   }
 
@@ -88,6 +108,7 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
         {items.map(item => {
           const isEditing = editingId === item.id
           const isDragging = draggingId === item.id
+          const isPersisted = /^\d+$/.test(item.id)
           return (
             <li
               key={item.id}
@@ -130,10 +151,27 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
 
                 {!isEditing && (
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <form method="get" action={`/admin/${conferenceId}/process-items/${item.id}`}>
-                      <button type="submit" className="btn">Edit</button>
-                    </form>
-                    <button type="button" onClick={() => removeItem(item.id)} className="btn">Delete</button>
+                    {isPersisted ? (
+                      <a
+                        href={`/admin/${conferenceId}/process-items/${item.id}`}
+                        className="btn"
+                      >
+                        Edit
+                      </a>
+                    ) : (
+                      <span className="btn" aria-disabled>
+                        Edit
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeItem(item.id)}
+                      className="btn"
+                      disabled={deletingId === item.id}
+                      aria-disabled={deletingId === item.id}
+                    >
+                      {deletingId === item.id ? 'Deleting…' : 'Delete'}
+                    </button>
                   </div>
                 )}
               </div>

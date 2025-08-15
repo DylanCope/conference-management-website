@@ -24,6 +24,7 @@ model Conference {
   conferenceDate         DateTime
   createdAt              DateTime     @default(now())
   submissions            Submission[]
+  processItems           ProcessItem[]
 }
 
 model Submission {
@@ -37,4 +38,59 @@ model Submission {
   conference    Conference? @relation(fields: [conferenceId], references: [id])
   conferenceId  Int?
   createdAt     DateTime    @default(now())
+}
+
+model ProcessItem {
+  id                    Int          @id @default(autoincrement())
+  conference            Conference   @relation(fields: [conferenceId], references: [id])
+  conferenceId          Int
+  title                 String
+  description           String?
+  owner                 String?
+  dueDaysBeforeAbstract Int?
+  order                 Int          @default(0)
+  createdAt             DateTime     @default(now())
+  tasks                 Task[]
+}
+
+enum TaskType {
+  FORM
+  REVIEW
+}
+
+model Task {
+  id            Int           @id @default(autoincrement())
+  processItem   ProcessItem   @relation(fields: [processItemId], references: [id])
+  processItemId Int
+  type          TaskType
+  order         Int           @default(0)
+  createdAt     DateTime      @default(now())
+  formQuestions FormQuestion[]
+}
+
+enum QuestionType {
+  SHORT
+  PARAGRAPH
+  MULTIPLE
+  DROPDOWN
+  DATE
+}
+
+model FormQuestion {
+  id        Int           @id @default(autoincrement())
+  task      Task          @relation(fields: [taskId], references: [id])
+  taskId    Int
+  type      QuestionType
+  title     String
+  required  Boolean       @default(false)
+  order     Int           @default(0)
+  options   FormOption[]
+}
+
+model FormOption {
+  id         Int           @id @default(autoincrement())
+  question   FormQuestion  @relation(fields: [questionId], references: [id])
+  questionId Int
+  text       String
+  order      Int           @default(0)
 }

@@ -23,6 +23,7 @@ export default async function EditConferencePage({ params }: Props) {
   const { id: idStr } = await params
   const id = Number(idStr)
   const conf = await prisma.conference.findUnique({ where: { id } })
+  const processItems = await prisma.processItem.findMany({ where: { conferenceId: id }, orderBy: { order: 'asc' } })
 
   if (!conf) {
     return <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>Conference not found.</main>
@@ -71,8 +72,11 @@ export default async function EditConferencePage({ params }: Props) {
         </div>
       </form>
 
-  {/* Process items editor (UI only for now) */}
-  <ProcessItemsEditor conferenceId={conf.id} />
+      {/* Process items editor */}
+      <ProcessItemsEditor
+        conferenceId={conf.id}
+        initialItems={processItems.map(pi => ({ id: String(pi.id), title: pi.title }))}
+      />
     </main>
   )
 }

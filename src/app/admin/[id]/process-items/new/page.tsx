@@ -1,11 +1,23 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
+import prisma from '../../../../../lib/prisma'
+
+async function getCurrentUser() {
+  const cookieStore = await cookies()
+  const sessionCookie = cookieStore.get('session')?.value
+  if (!sessionCookie) return null
+  try {
+    const session = JSON.parse(sessionCookie) as { userId?: number }
+    if (!session.userId) return null
+    const user = await prisma.user.findUnique({ where: { id: session.userId } })
+    return user
+  } catch {
+    return null
+  }
+}
 
 export default async function NewProcessItemPage({ params }: { params: Promise<{ id: string }> }) {
-  const cookieStore = await cookies()
-  const userEmail = (() => {
-    try { return JSON.parse(cookieStore.get('session')?.value || '{}').email as string } catch { return undefined }
-  })()
+  const user = await getCurrentUser()
   const { id: idStr } = await params
   const confId = Number(idStr)
 
@@ -20,13 +32,14 @@ export default async function NewProcessItemPage({ params }: { params: Promise<{
             <button type="submit" className="btn">Back to Conference</button>
           </form>
         </div>
-        <div style={{ color: '#555' }}>{userEmail ?? 'Not signed in'}</div>
+  <div style={{ color: '#555' }}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
       <h1 style={{ fontSize: 24 }}>New Process Item</h1>
       <p style={{ color: '#666', marginTop: 4 }}>Create a process item with full details.</p>
 
-      <form method="post" action={`#`} style={{ maxWidth: 700, marginTop: 12 }}>
+      <form method="post" action={`/api/process-items`} style={{ maxWidth: 700, marginTop: 12 }}>
+        <input type="hidden" name="conferenceId" value={confId} />
         <label style={{ display: 'block', marginBottom: 6 }}>Title</label>
         <input name="title" placeholder="e.g., Internal review" style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
 
@@ -58,7 +71,7 @@ export default async function NewProcessItemPage({ params }: { params: Promise<{
         </div>
       </form>
 
-      <div style={{ marginTop: 8, color: '#888', fontSize: 12 }}>Saving is not wired yet. This page is a placeholder for full details.</div>
+  <div style={{ marginTop: 8, color: '#888', fontSize: 12 }}>This creates a new process item for the conference.</div>
     </main>
   )
 }

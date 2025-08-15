@@ -1,21 +1,50 @@
-import Link from 'next/link'
+import prisma from '../../../../../lib/prisma'
 import { cookies } from 'next/headers'
 
-export default async function EditProcessItemPage({ params }: { params: Promise<{ id: string, itemId: string }> }) {
+async function getCurrentUser() {
   const cookieStore = await cookies()
-  const userEmail = (() => {
-    try { return JSON.parse(cookieStore.get('session')?.value || '{}').email as string } catch { return undefined }
-  })()
+  const sessionCookie = cookieStore.get('session')?.value
+  if (!sessionCookie) return null
+  try {
+    const session = JSON.parse(sessionCookie) as { userId?: number }
+    if (!session.userId) return null
+    const user = await prisma.user.findUnique({ where: { id: session.userId } })
+    return user
+  } catch {
+    return null
+  }
+}
+
+export default async function EditProcessItemPage({ params }: { params: Promise<{ id: string, itemId: string }> }) {
+  const user = await getCurrentUser()
   const { id: idStr, itemId } = await params
   const confId = Number(idStr)
-
-  // Placeholder initial values; will be replaced by DB fetch later
-  const initial = {
-    title: 'Internal review',
-    description: 'Two lab members provide feedback on the draft.',
-    owner: 'Project lead',
-    dueDaysBeforeAbstract: 14,
+  const pItemId = Number(itemId)
+  if (!Number.isFinite(pItemId)) {
+    return (
+      <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+        <p style={{ color: '#666' }}>Invalid process item id.</p>
+      </main>
+    )
   }
+
+  // Ensure the process item exists
+  const processItem = await prisma.processItem.findUnique({ where: { id: pItemId } })
+  if (!processItem) {
+    return (
+      <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+        <p>Process item not found.</p>
+      </main>
+    )
+  }
+
+  const tasks = await prisma.task.findMany({
+    where: { processItemId: pItemId },
+    orderBy: { order: 'asc' },
+    include: { formQuestions: { include: { options: true }, orderBy: { order: 'asc' } } },
+  })
+
+  // Use actual values from the database for initial form defaults
 
   return (
     <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
@@ -28,35 +57,74 @@ export default async function EditProcessItemPage({ params }: { params: Promise<
             <button type="submit" className="btn">Back to Conference</button>
           </form>
         </div>
-        <div style={{ color: '#555' }}>{userEmail ?? 'Not signed in'}</div>
+  <div style={{ color: '#555' }}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
       <h1 style={{ fontSize: 24 }}>Edit Process Item</h1>
       <p style={{ color: '#666', marginTop: 4 }}>Edit the details for this process item.</p>
 
-      <form method="post" action={`#`} style={{ maxWidth: 700, marginTop: 12 }}>
+      <form
+        method="post"
+        action={`/api/process-items/${pItemId}?_method=PUT&returnTo=${encodeURIComponent(`/admin/${confId}`)}`}
+        style={{ maxWidth: 700, marginTop: 12 }}
+      >
         <label style={{ display: 'block', marginBottom: 6 }}>Title</label>
-        <input name="title" defaultValue={initial.title} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+        <input name="title" defaultValue={processItem.title} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
 
         <label style={{ display: 'block', marginTop: 10 }}>Description</label>
-        <textarea name="description" defaultValue={initial.description} rows={4} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+        <textarea name="description" defaultValue={processItem.description ?? ''} rows={4} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
 
         <label style={{ display: 'block', marginTop: 10 }}>Owner/Lead</label>
-        <input name="owner" defaultValue={initial.owner} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+        <input name="owner" defaultValue={processItem.owner ?? ''} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
 
         <label style={{ display: 'block', marginTop: 10 }}>Due (relative days before abstract deadline)</label>
-        <input type="number" name="dueDaysBeforeAbstract" defaultValue={initial.dueDaysBeforeAbstract} style={{ width: 200, padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+        <input type="number" name="dueDaysBeforeAbstract" defaultValue={(processItem.dueDaysBeforeAbstract ?? '').toString()} style={{ width: 200, padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
 
         <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
           <button type="submit" className="btn">Save</button>
-          <form method="post" action={`/admin/${confId}`}>
-          <button type="submit" className="btn">Cancel</button>
+          <form method="get" action={`/admin/${confId}`}>
+            <button type="submit" className="btn">Cancel</button>
           </form>
         </div>
 
       </form>
 
-      <div style={{ marginTop: 8, color: '#888', fontSize: 12 }}>Saving is not wired yet. This page is a placeholder for full details.</div>
+
+      <section style={{ marginTop: 24 }}>
+        <h2 style={{ fontSize: 18, marginBottom: 8 }}>Tasks</h2>
+        <p style={{ color: '#666', marginTop: 0 }}>Add tasks to this process item. Start with a form; reviews will come later.</p>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <form method="get" action={`/admin/${confId}/process-items/${itemId}/tasks/new/form`}>
+            <button type="submit" className="btn">Create form</button>
+          </form>
+        </div>
+
+        {tasks.length > 0 ? (
+          <ul style={{ listStyle: 'none', padding: 0, margin: '12px 0', display: 'grid', gap: 8 }}>
+            {tasks.map((t) => (
+              <li key={t.id} style={{ border: '1px solid #eee', borderRadius: 8, padding: 12 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <strong>{t.type === 'FORM' ? 'Form' : 'Task'}</strong>
+                    <div style={{ color: '#666', marginTop: 4, fontSize: 14 }}>{t.formQuestions.length} question(s)</div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <a href={`/admin/${confId}/process-items/${pItemId}/tasks/${t.id}`} className="btn">View</a>
+                    <a href={`/admin/${confId}/process-items/${pItemId}/tasks/${t.id}/delete`} className="btn">Delete</a>
+                    {t.type === 'FORM' ? (
+                      <a href={`/admin/${confId}/process-items/${pItemId}/tasks/${t.id}/edit/form`} className="btn">Edit</a>
+                    ) : (
+                      <span className="btn" aria-disabled>Edit</span>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p style={{ color: '#666', marginTop: 12 }}>No tasks yet.</p>
+        )}
+      </section>
     </main>
   )
 }

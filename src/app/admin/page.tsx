@@ -42,8 +42,8 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      <h1 style={{fontSize:24}}>Admin — Conferences</h1>
-      <p style={{marginTop:8}}>Create or manage conferences here. (Admin protected)</p>
+      <h1 style={{fontSize:24}}>Manage Conferences</h1>
+      <p style={{marginTop:8}}>Create or manage conferences here.</p>
       <p style={{marginTop:12}}><a href="/admin/new">Create new conference</a></p>
 
       <div style={{marginTop:16}}>
