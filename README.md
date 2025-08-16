@@ -23,10 +23,9 @@ This starts a Postgres 16 instance on port 5432 (see `docker-compose.yml`).
    npm install
    npm run prisma:generate
 
-4) Run migrations and seed (admin users)
+4) Run migrations (local dev DB)
 
    npm run prisma:migrate
-   npm run prisma:seed
 
 5) Start the dev server
 
@@ -51,16 +50,18 @@ We recommend Vercel for hosting and Neon for Postgres.
 
 Note: Prisma is already configured for Postgres in `prisma/schema.prisma`. Provide DATABASE_URL in Vercel.
 
-### 3. Run migrations on deploy
-Use the included GitHub Actions workflow `.github/workflows/deploy.yml`. It runs `prisma migrate deploy` on pushes to `main` or `staging` and on PRs to `main`.
+### 3. Run migrations on deploy (automation)
+Use the included GitHub Actions workflow `.github/workflows/db-migrate.yml`. It runs `prisma migrate deploy` on pushes to `main`.
 
 Setup:
 - In GitHub repo Settings → Secrets and variables → Actions:
-   - Add secret `DATABASE_URL` for staging/prod branch targets.
+   - Add secret `DATABASE_URL` (your Neon production URL).
 
 Alternatively, run migrations manually from your machine:
 
-    DATABASE_URL="<neon connection>" npx prisma migrate deploy
+```bash
+DATABASE_URL="<neon connection>" npx prisma migrate deploy
+```
 
 ### 4. Vercel build settings
 No special config required. Vercel will run `next build` and host the app. Ensure env vars are present.
