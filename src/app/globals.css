@@ -74,6 +74,7 @@ html {
 	--muted: #4b5563; /* gray-600 for light */
 	--danger: #ef4444; /* red-500 */
 	--success: #10b981; /* emerald-500 */
+	color-scheme: light;
 }
 
 .dark {
@@ -85,6 +86,21 @@ html {
 	--muted: #c0c6c5;
 	--danger: #ff6b6b;
 	--success: #34d399; /* emerald-400 */
+	color-scheme: dark;
+}
+
+/* System dark fallback to avoid flashes before any JS runs */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #22252A;
+		--text: #ADB2B1;
+		--card: #292C33;
+		--border: #353941;
+		--muted: #c0c6c5;
+		--danger: #ff6b6b;
+		--success: #34d399;
+		color-scheme: dark;
+	}
 }
 
 /* Apply variables */
@@ -106,7 +122,8 @@ html, body {
 }
 .btn:hover { background: color-mix(in oklab, var(--card) 86%, var(--text)); }
 
-/* Prevent transition flash on first paint when toggling theme class */
-* { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+/* Prevent background flash between routes: avoid animating page background */
+* { transition: color .15s ease, border-color .15s ease; }
+html, body, .page-wrap { transition: none; }
 html.theme-init * { transition: none !important; }
 

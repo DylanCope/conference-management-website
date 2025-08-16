@@ -128,9 +128,23 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
                     draggable
                     onDragStart={(e) => onDragStart(e, item.id)}
                     onDragEnd={onDragEnd}
-                    style={{ cursor: 'grab', padding: '4px 8px' }}
+                    style={{
+                      cursor: 'grab', padding: '4px 8px',
+                      border: '1px solid var(--border)', borderRadius: 6,
+                      background: 'transparent', color: 'var(--muted)'
+                    }}
+                    onMouseDown={(e) => (e.currentTarget.style.cursor = 'grabbing')}
+                    onMouseUp={(e) => (e.currentTarget.style.cursor = 'grab')}
                   >
-                    ☰
+                    {/* Simple SVG grip for consistent dark/light rendering */}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+                      <circle cx="7" cy="12" r="1.5" fill="currentColor"/>
+                      <circle cx="7" cy="17" r="1.5" fill="currentColor"/>
+                      <circle cx="12" cy="7" r="1.5" fill="currentColor"/>
+                      <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                      <circle cx="12" cy="17" r="1.5" fill="currentColor"/>
+                    </svg>
                   </button>
 
                   {isEditing ? (

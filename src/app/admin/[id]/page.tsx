@@ -31,8 +31,8 @@ export default async function EditConferencePage({ params }: { params: { id: str
           <form method="get" action="/admin">
             <button type="submit" className="btn">Manage Conferences</button>
           </form>
-        </div>
-        <div style={{color:'#555'}}>
+  </div>
+  <div style={{color:'var(--muted)'}}>
           {user?.email ?? 'Not signed in'}
         </div>
       </div>
@@ -46,13 +46,28 @@ export default async function EditConferencePage({ params }: { params: { id: str
   <input defaultValue={conf.website ?? ''} name="website" style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
 
         <label style={{display:'block', marginTop:10}}>Abstract deadline</label>
-        <input name="abstractDeadline" type="date" defaultValue={toInputDate(conf.abstractDeadline)} />
+        <input
+          name="abstractDeadline"
+          type="date"
+          defaultValue={toInputDate(conf.abstractDeadline)}
+          style={{ padding: 8, border: '1px solid var(--border)', borderRadius: 4, background: 'var(--card)', color: 'var(--text)' }}
+        />
 
         <label style={{display:'block', marginTop:10}}>Full submission deadline</label>
-        <input name="fullSubmissionDeadline" type="date" defaultValue={toInputDate(conf.fullSubmissionDeadline)} />
+        <input
+          name="fullSubmissionDeadline"
+          type="date"
+          defaultValue={toInputDate(conf.fullSubmissionDeadline)}
+          style={{ padding: 8, border: '1px solid var(--border)', borderRadius: 4, background: 'var(--card)', color: 'var(--text)' }}
+        />
 
         <label style={{display:'block', marginTop:10}}>Conference date</label>
-        <input name="conferenceDate" type="date" defaultValue={toInputDate(conf.conferenceDate)} />
+        <input
+          name="conferenceDate"
+          type="date"
+          defaultValue={toInputDate(conf.conferenceDate)}
+          style={{ padding: 8, border: '1px solid var(--border)', borderRadius: 4, background: 'var(--card)', color: 'var(--text)' }}
+        />
 
         <div style={{marginTop:12}}>
           <button type="submit" className="btn">Save</button>
