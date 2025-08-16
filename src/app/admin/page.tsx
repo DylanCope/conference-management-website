@@ -44,7 +44,11 @@ export default async function AdminPage() {
 
       <h1 style={{fontSize:24}}>Manage Conferences</h1>
       <p style={{marginTop:8}}>Create or manage conferences here.</p>
-      <p style={{marginTop:12}}><a href="/admin/new">Create new conference</a></p>
+      <div style={{marginTop:12}}>
+        <form method="get" action="/admin/new">
+          <button type="submit" className="btn">Create new conference</button>
+        </form>
+      </div>
 
       <div style={{marginTop:16}}>
         <h2 style={{fontSize:18, marginBottom:8}}>Existing conferences</h2>

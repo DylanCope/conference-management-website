@@ -51,22 +51,48 @@ export default async function SubmissionTasksPage({ params }: { params: Promise<
     })
     const conference = await prisma.conference.findUnique({ where: { id: submission.conferenceId } })
 
+    // Precompute absolute due date (YYYY-MM-DD UTC) per process item and whether each item is active
+    let abstractUTC: Date | null = null
+    if (conference) {
+      const a = new Date(conference.abstractDeadline)
+      abstractUTC = new Date(Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate()))
+    }
+    const today = new Date()
+    const todayUTCStr = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())).toISOString().slice(0, 10)
+    const itemDueStr: Record<number, string | null> = {}
+    for (const item of processItems) {
+      if (abstractUTC && item.dueDaysBeforeAbstract !== null && item.dueDaysBeforeAbstract !== undefined) {
+        const d = new Date(abstractUTC)
+        d.setUTCDate(d.getUTCDate() - item.dueDaysBeforeAbstract)
+        itemDueStr[item.id] = d.toISOString().slice(0, 10)
+      } else {
+        itemDueStr[item.id] = null
+      }
+    }
+    const activeItemIds = new Set<number>()
+    for (let i = 0; i < processItems.length; i++) {
+      if (i === 0) { activeItemIds.add(processItems[i].id); continue }
+      const prev = processItems[i - 1]
+      const prevDue = itemDueStr[prev.id]
+      if (!prevDue || prevDue <= todayUTCStr) {
+        activeItemIds.add(processItems[i].id)
+      }
+    }
+
   // Fetch all task submissions for this submission in one go
   const subs = await (prisma as any).taskSubmission.findMany({ where: { submissionId: subId } })
   const completedMap = new Map<number, string | null>()
   for (const s of subs) completedMap.set(s.taskId, s.completedAt ? new Date(s.completedAt).toISOString() : null)
 
   for (const item of processItems) {
+      // Only include tasks for ACTIVE process items
+      if (!activeItemIds.has(item.id)) continue
       const itemTasks = await prisma.task.findMany({ where: { processItemId: item.id }, orderBy: { order: 'asc' } })
       for (const t of itemTasks) {
         // Compute an absolute due date from the stored relative value on the process item, if present
         let dueDate: string | null = null
-        if (conference && item.dueDaysBeforeAbstract !== null && item.dueDaysBeforeAbstract !== undefined) {
-          const abstract = new Date(conference.abstractDeadline)
-          const utcYear = abstract.getUTCFullYear()
-          const utcMonth = abstract.getUTCMonth()
-          const utcDay = abstract.getUTCDate()
-          const base = new Date(Date.UTC(utcYear, utcMonth, utcDay))
+        if (abstractUTC && item.dueDaysBeforeAbstract !== null && item.dueDaysBeforeAbstract !== undefined) {
+          const base = new Date(abstractUTC)
           base.setUTCDate(base.getUTCDate() - item.dueDaysBeforeAbstract)
           dueDate = base.toISOString().slice(0, 10)
         }

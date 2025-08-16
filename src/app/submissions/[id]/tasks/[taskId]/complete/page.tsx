@@ -53,6 +53,32 @@ export default async function CompleteTaskPage({ params }: { params: Params }) {
   })
   const answers: Record<string, any> = (existing?.answers as any) || {}
 
+  // Determine if this task's process item is ACTIVE (first item always active; else previous item's due date must have passed)
+  let isActive = true
+  if (submission.conferenceId) {
+    const items = await prisma.processItem.findMany({ where: { conferenceId: submission.conferenceId }, orderBy: { order: 'asc' } })
+    const idx = items.findIndex(i => i.id === task.processItemId)
+    if (idx > 0) {
+      const prev = items[idx - 1]
+      if (prev) {
+        const conf = await prisma.conference.findUnique({ where: { id: submission.conferenceId } })
+        if (conf) {
+          const a = new Date(conf.abstractDeadline)
+          const abstractUTC = new Date(Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate()))
+          let prevDueStr: string | null = null
+          if (prev.dueDaysBeforeAbstract !== null && prev.dueDaysBeforeAbstract !== undefined) {
+            const d = new Date(abstractUTC)
+            d.setUTCDate(d.getUTCDate() - prev.dueDaysBeforeAbstract)
+            prevDueStr = d.toISOString().slice(0, 10)
+          }
+          const today = new Date()
+          const todayStr = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())).toISOString().slice(0, 10)
+          if (prevDueStr && prevDueStr > todayStr) isActive = false
+        }
+      }
+    }
+  }
+
   return (
     <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
@@ -72,7 +98,11 @@ export default async function CompleteTaskPage({ params }: { params: Params }) {
         {task.type === 'FORM' ? 'Form' : task.type} • {task.processItem.title}
       </p>
 
-      {task.type !== 'FORM' ? (
+      {!isActive ? (
+        <div style={{ color: '#666', background: '#f6f6f6', border: '1px dashed #ccc', padding: 12, borderRadius: 8 }}>
+          This task isn't active yet. It will become available after the previous step's due date has passed.
+        </div>
+      ) : task.type !== 'FORM' ? (
         <p style={{ color: '#666' }}>Completing this task type is not implemented yet.</p>
       ) : (
         <form method="post" action="/api/task-submissions" style={{ display: 'grid', gap: 12 }}>

@@ -43,6 +43,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).send("Task doesn't belong to submission's conference")
     }
 
+    // Ensure the task's process item is ACTIVE: first item always active; otherwise previous item's due date must have passed
+    if (submission.conferenceId) {
+      const items = await prisma.processItem.findMany({ where: { conferenceId: submission.conferenceId }, orderBy: { order: 'asc' } })
+      const idx = items.findIndex(i => i.id === task.processItemId)
+      if (idx > 0) {
+        const prev = items[idx - 1]
+        if (prev) {
+          const conf = await prisma.conference.findUnique({ where: { id: submission.conferenceId } })
+          if (conf) {
+            const a = new Date(conf.abstractDeadline)
+            const abstractUTC = new Date(Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate()))
+            let prevDueStr: string | null = null
+            if (prev.dueDaysBeforeAbstract !== null && prev.dueDaysBeforeAbstract !== undefined) {
+              const d = new Date(abstractUTC)
+              d.setUTCDate(d.getUTCDate() - prev.dueDaysBeforeAbstract)
+              prevDueStr = d.toISOString().slice(0,10)
+            }
+            const today = new Date()
+            const todayStr = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())).toISOString().slice(0,10)
+            if (prevDueStr && prevDueStr > todayStr) {
+              return res.status(400).send('Task is not active yet')
+            }
+          }
+        }
+      }
+    }
+
     // Build answers object from q_<id> fields
     const answers: Record<string, any> = {}
     for (const q of task.formQuestions) {

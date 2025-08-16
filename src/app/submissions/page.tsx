@@ -26,36 +26,41 @@ export default async function SubmissionsPage(){
     if (!conferenceId) return 0
     const conf = await prisma.conference.findUnique({ where: { id: conferenceId } })
     if (!conf) return 0
-    const items = await prisma.processItem.findMany({ where: { conferenceId }, select: { id: true, dueDaysBeforeAbstract: true } })
+    const items = await prisma.processItem.findMany({ where: { conferenceId }, orderBy: { order: 'asc' }, select: { id: true, dueDaysBeforeAbstract: true, order: true } })
     if (items.length === 0) return 0
     const itemIds = items.map(i => i.id)
     const tasks = await prisma.task.findMany({ where: { processItemId: { in: itemIds } }, select: { id: true, processItemId: true } })
-    const counts = new Map<number, number>()
-    for (const t of tasks) counts.set(t.processItemId, (counts.get(t.processItemId) || 0) + 1)
 
-    const abstract = new Date(conf.abstractDeadline)
-    const aY = abstract.getUTCFullYear(); const aM = abstract.getUTCMonth(); const aD = abstract.getUTCDate()
-    const abstractUTC = new Date(Date.UTC(aY, aM, aD))
+    // Compute active items
+    const a = new Date(conf.abstractDeadline)
+    const abstractUTC = new Date(Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate()))
     const today = new Date()
-    const tY = today.getUTCFullYear(); const tM = today.getUTCMonth(); const tD = today.getUTCDate()
-    const todayStr = new Date(Date.UTC(tY, tM, tD)).toISOString().slice(0,10)
-
-    let dueTotal = 0
+    const todayStr = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())).toISOString().slice(0,10)
+    const itemDueStr: Record<number, string | null> = {}
     for (const it of items) {
-      const rel = it.dueDaysBeforeAbstract
-      if (rel === null || rel === undefined) continue
-      const due = new Date(abstractUTC)
-      due.setUTCDate(due.getUTCDate() - rel)
-      const dueStr = due.toISOString().slice(0,10)
-      if (dueStr <= todayStr) {
-        dueTotal += (counts.get(it.id) || 0)
+      if (it.dueDaysBeforeAbstract != null) {
+        const d = new Date(abstractUTC)
+        d.setUTCDate(d.getUTCDate() - it.dueDaysBeforeAbstract)
+        itemDueStr[it.id] = d.toISOString().slice(0,10)
+      } else {
+        itemDueStr[it.id] = null
       }
     }
+    const activeItemIds = new Set<number>()
+    for (let i = 0; i < items.length; i++) {
+      if (i === 0) { activeItemIds.add(items[i].id); continue }
+      const prev = items[i-1]
+      const prevDue = itemDueStr[prev.id]
+      if (!prevDue || prevDue <= todayStr) activeItemIds.add(items[i].id)
+    }
+
+    // Count tasks for active items
+    const activeTaskIds = tasks.filter(t => activeItemIds.has(t.processItemId)).map(t => t.id)
+    let dueTotal = activeTaskIds.length
     // Subtract completed tasks for this submission if submissionId provided
     if (submissionId) {
-      const taskIds = tasks.map(t => t.id)
-      if (taskIds.length > 0) {
-  const completed = await (prisma as any).taskSubmission.findMany({ where: { submissionId, taskId: { in: taskIds } } })
+      if (activeTaskIds.length > 0) {
+        const completed = await (prisma as any).taskSubmission.findMany({ where: { submissionId, taskId: { in: activeTaskIds } } })
         dueTotal = Math.max(0, dueTotal - completed.length)
       }
     }
@@ -90,7 +95,11 @@ export default async function SubmissionsPage(){
       </div>
 
       <h1 style={{fontSize:24}}>My Submissions</h1>
-      <p style={{marginTop:8}}><a href="/submissions/new">Create new submission</a></p>
+      <div style={{marginTop:8}}>
+        <form method="get" action="/submissions/new">
+          <button type="submit" className="btn">Create new submission</button>
+        </form>
+      </div>
 
       <div style={{marginTop:12}}>
         {(!user) && <p style={{color:'#666'}}>Please sign in to view your submissions.</p>}
