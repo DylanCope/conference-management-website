@@ -1,14 +1,14 @@
-export default function Home() {
-  return (
-    <main style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 28, marginBottom: 8 }}>Conference Submissions Manager</h1>
-      <p style={{ marginBottom: 16, color: '#444' }}>
-        Sign in to continue.
-      </p>
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../auth'
 
-  <a href="/api/auth/signin/github" className="btn">Sign in with GitHub</a>
-  <div style={{ height: 8 }} />
-  <a href="/api/auth/signin/google" className="btn">Sign in with Google</a>
-    </main>
-  )
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+export default async function Home() {
+  const session = await getServerSession(authOptions as any)
+  if (session) {
+    redirect('/submissions')
+  }
+  redirect('/api/auth/signin?callbackUrl=%2Fsubmissions')
 }

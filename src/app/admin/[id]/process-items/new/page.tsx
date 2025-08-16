@@ -14,7 +14,7 @@ export default async function NewProcessItemPage({ params }: { params: { id: str
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/auth/signout">
-            <input type="hidden" name="callbackUrl" value="/" />
+            <input type="hidden" name="callbackUrl" value="/submissions" />
             <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action={`/admin/${confId}`}>

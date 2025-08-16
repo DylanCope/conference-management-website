@@ -17,7 +17,7 @@ export default async function AdminPage() {
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
-            <input type="hidden" name="callbackUrl" value="/" />
+            <input type="hidden" name="callbackUrl" value="/submissions" />
             <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action="/submissions">
