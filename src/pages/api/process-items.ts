@@ -7,12 +7,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return
   }
   try {
-    const { conferenceId, title, description, owner, dueDaysBeforeAbstract } = req.body as any
+    const { conferenceId, title, description, dueDate } = req.body as any
     const confId = Number(conferenceId)
     if (!confId || !title || typeof title !== 'string') {
       res.status(400).send('conferenceId and title are required')
       return
     }
+
+    // Compute relative days before abstract if an absolute due date is provided
+    let dueDaysBeforeAbstract: number | null = null
+    if (typeof dueDate === 'string' && dueDate.length > 0) {
+      const conf = await prisma.conference.findUnique({ where: { id: confId } })
+      if (!conf) {
+        res.status(404).send('Conference not found')
+        return
+      }
+      const abstract = new Date(conf.abstractDeadline)
+      const due = new Date(`${dueDate}T12:00:00Z`)
+      const msPerDay = 24 * 60 * 60 * 1000
+      dueDaysBeforeAbstract = Math.round((abstract.getTime() - due.getTime()) / msPerDay)
+    }
+
     // Determine next order for this conference
     const max = await prisma.processItem.aggregate({ where: { conferenceId: confId }, _max: { order: true } })
     const nextOrder = (max._max.order ?? -1) + 1
@@ -22,8 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         conferenceId: confId,
         title,
         description: description || null,
-        owner: owner || null,
-        dueDaysBeforeAbstract: dueDaysBeforeAbstract !== undefined && dueDaysBeforeAbstract !== '' ? Number(dueDaysBeforeAbstract) : null,
+        owner: null,
+        dueDaysBeforeAbstract,
         order: nextOrder,
       }
     })

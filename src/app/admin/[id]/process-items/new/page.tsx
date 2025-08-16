@@ -46,11 +46,8 @@ export default async function NewProcessItemPage({ params }: { params: Promise<{
         <label style={{ display: 'block', marginTop: 10 }}>Description</label>
         <textarea name="description" placeholder="Optional longer description or checklist" rows={4} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
 
-        <label style={{ display: 'block', marginTop: 10 }}>Owner/Lead</label>
-        <input name="owner" placeholder="Optional, e.g., Project lead" style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
-
-        <label style={{ display: 'block', marginTop: 10 }}>Due (relative days before abstract deadline)</label>
-        <input type="number" name="dueDaysBeforeAbstract" placeholder="e.g., 14" style={{ width: 200, padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+  <label style={{ display: 'block', marginTop: 10 }}>Due date</label>
+  <input type="date" name="dueDate" style={{ width: 220, padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
 
         <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
           <button type="submit" className="btn">Save</button>

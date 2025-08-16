@@ -16,10 +16,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'PUT') {
     try {
-      const { title, description, owner, dueDaysBeforeAbstract } = (req.body || {}) as any
+      const { title, description, dueDate, owner, dueDaysBeforeAbstract } = (req.body || {}) as any
       if (!title || typeof title !== 'string') {
         return res.status(400).send('title is required')
       }
+
+      // If dueDate provided, compute relative days vs. conference abstract deadline
+      let relative: number | null | undefined = undefined
+      if (typeof dueDate === 'string') {
+        if (dueDate.length === 0) {
+          relative = null
+        } else {
+          const proc = await prisma.processItem.findUnique({ where: { id: pid }, select: { conferenceId: true } })
+          if (!proc) return res.status(404).send('Process item not found')
+          const conf = await prisma.conference.findUnique({ where: { id: proc.conferenceId }, select: { abstractDeadline: true } })
+          if (!conf) return res.status(404).send('Conference not found')
+          const abstract = new Date(conf.abstractDeadline)
+          const due = new Date(`${dueDate}T12:00:00Z`)
+          const msPerDay = 24 * 60 * 60 * 1000
+          relative = Math.round((abstract.getTime() - due.getTime()) / msPerDay)
+        }
+      }
+
       await prisma.processItem.update({
         where: { id: pid },
         data: {
@@ -27,11 +45,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           description: description !== undefined ? (description || null) : undefined,
           owner: owner !== undefined ? (owner || null) : undefined,
           dueDaysBeforeAbstract:
-            dueDaysBeforeAbstract !== undefined && dueDaysBeforeAbstract !== ''
-              ? Number(dueDaysBeforeAbstract)
-              : dueDaysBeforeAbstract === ''
-                ? null
-                : undefined,
+            relative !== undefined ? relative : (
+              dueDaysBeforeAbstract !== undefined && dueDaysBeforeAbstract !== ''
+                ? Number(dueDaysBeforeAbstract)
+                : dueDaysBeforeAbstract === ''
+                  ? null
+                  : undefined
+            ),
         }
       })
 
@@ -51,6 +71,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const taskIds = tasks.map(t => t.id)
 
       await prisma.$transaction([
+        (prisma as any).taskSubmission.deleteMany({ where: { taskId: { in: taskIds } } }),
         prisma.formOption.deleteMany({ where: { question: { taskId: { in: taskIds } } } }),
         prisma.formQuestion.deleteMany({ where: { taskId: { in: taskIds } } }),
         prisma.task.deleteMany({ where: { processItemId: pid } }),

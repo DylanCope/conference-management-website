@@ -46,6 +46,20 @@ export default async function EditProcessItemPage({ params }: { params: Promise<
 
   // Use actual values from the database for initial form defaults
 
+  // Compute default due date (absolute) from stored relative days vs. the conference abstract deadline
+  const conf = await prisma.conference.findUnique({ where: { id: confId }, select: { abstractDeadline: true } })
+  let defaultDueDate = ''
+  if (conf && processItem.dueDaysBeforeAbstract !== null && processItem.dueDaysBeforeAbstract !== undefined) {
+    const abstract = new Date(conf.abstractDeadline)
+    // Use UTC-safe date math to avoid timezone shifting when formatting to yyyy-mm-dd
+    const utcYear = abstract.getUTCFullYear()
+    const utcMonth = abstract.getUTCMonth()
+    const utcDate = abstract.getUTCDate()
+    const asUTC = new Date(Date.UTC(utcYear, utcMonth, utcDate))
+    asUTC.setUTCDate(asUTC.getUTCDate() - processItem.dueDaysBeforeAbstract)
+    defaultDueDate = asUTC.toISOString().slice(0, 10)
+  }
+
   return (
     <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
@@ -74,11 +88,13 @@ export default async function EditProcessItemPage({ params }: { params: Promise<
         <label style={{ display: 'block', marginTop: 10 }}>Description</label>
         <textarea name="description" defaultValue={processItem.description ?? ''} rows={4} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
 
-        <label style={{ display: 'block', marginTop: 10 }}>Owner/Lead</label>
-        <input name="owner" defaultValue={processItem.owner ?? ''} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
-
-        <label style={{ display: 'block', marginTop: 10 }}>Due (relative days before abstract deadline)</label>
-        <input type="number" name="dueDaysBeforeAbstract" defaultValue={(processItem.dueDaysBeforeAbstract ?? '').toString()} style={{ width: 200, padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+        <label style={{ display: 'block', marginTop: 10 }}>Due date</label>
+        <input
+          type="date"
+          name="dueDate"
+          defaultValue={defaultDueDate}
+          style={{ width: 220, padding: 8, border: '1px solid #ddd', borderRadius: 4 }}
+        />
 
         <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
           <button type="submit" className="btn">Save</button>

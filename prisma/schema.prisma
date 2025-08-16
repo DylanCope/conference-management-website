@@ -38,6 +38,7 @@ model Submission {
   conference    Conference? @relation(fields: [conferenceId], references: [id])
   conferenceId  Int?
   createdAt     DateTime    @default(now())
+  taskSubmissions TaskSubmission[]
 }
 
 model ProcessItem {
@@ -48,6 +49,7 @@ model ProcessItem {
   description           String?
   owner                 String?
   dueDaysBeforeAbstract Int?
+  dueDate               DateTime?
   order                 Int          @default(0)
   createdAt             DateTime     @default(now())
   tasks                 Task[]
@@ -66,6 +68,7 @@ model Task {
   order         Int           @default(0)
   createdAt     DateTime      @default(now())
   formQuestions FormQuestion[]
+  submissions   TaskSubmission[]
 }
 
 enum QuestionType {
@@ -93,4 +96,18 @@ model FormOption {
   questionId Int
   text       String
   order      Int           @default(0)
+}
+
+model TaskSubmission {
+  id           Int         @id @default(autoincrement())
+  task         Task        @relation(fields: [taskId], references: [id])
+  taskId       Int
+  submission   Submission  @relation(fields: [submissionId], references: [id])
+  submissionId Int
+  answers      Json?
+  completedAt  DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([taskId, submissionId])
 }

@@ -24,6 +24,13 @@ html, body {
 	color: var(--btn-text);
 	text-decoration: none;
 	cursor: pointer;
+	/* Normalize differences between <a> and <button> */
+	appearance: none;
+	-webkit-appearance: none;
+	font: inherit;
+	line-height: 1.15; /* consistent height across elements */
+	box-sizing: border-box;
+	white-space: nowrap;
 }
 
 .btn:hover {

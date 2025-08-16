@@ -17,6 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (method === 'DELETE') {
     try {
       await prisma.$transaction([
+        (prisma as any).taskSubmission.deleteMany({ where: { taskId } }),
         prisma.formOption.deleteMany({ where: { question: { taskId } } }),
         prisma.formQuestion.deleteMany({ where: { taskId } }),
         prisma.task.delete({ where: { id: taskId } }),
