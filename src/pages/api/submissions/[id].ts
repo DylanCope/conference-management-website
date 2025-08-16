@@ -1,19 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
-import { parse } from 'cookie'
-
-const prisma = new PrismaClient()
-
-function getSession(req: NextApiRequest){
-  const c = req.headers.cookie
-  if (!c) return null
-  const parsed = parse(c)
-  try { return JSON.parse(parsed.session || 'null') } catch { return null }
-}
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '../../../auth'
+import prisma from '../../../lib/prisma'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = getSession(req)
-  if (!session) return res.status(401).json({ error: 'Not logged in' })
+  const session = await getServerSession(req, res, authOptions)
+  const userId = (session?.user as any)?.id as number | undefined
+  if (!userId) return res.status(401).json({ error: 'Not logged in' })
 
   const id = Number(req.query.id)
   if (!id || Number.isNaN(id)) return res.status(400).json({ error: 'Invalid id' })
@@ -25,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (method === 'PUT') {
     const { title, firstAuthors, seniorAuthors, overleaf, conferenceId } = req.body as Record<string, string>
     const confIdNum = conferenceId ? Number(conferenceId) : undefined
-    await prisma.submission.update({
+  await prisma.submission.update({
       where: { id },
       data: {
         title,
