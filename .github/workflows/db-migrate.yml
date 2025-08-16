@@ -27,8 +27,5 @@ jobs:
       - name: Run migrations against production database
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          # If a previous SQLite-based migration exists/failed, mark it as applied to skip it (idempotent)
-          npx prisma migrate resolve --applied 20250815181335_init || true
-          # Now deploy the current Postgres migrations
+        run: 
           npx prisma migrate deploy

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../lib/prisma'
-import { parse as parseCookie } from 'cookie'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '../../auth'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -17,18 +18,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).send('Invalid submissionId or taskId')
     }
 
-    // Auth: get current user from cookie
-    const rawCookie = req.headers.cookie || ''
-    const cookies = parseCookie(rawCookie || '')
-  const sessionRaw = cookies['session']
-    let currentUserId: number | null = null
-    if (sessionRaw) {
-      try {
-  const sess = JSON.parse(decodeURIComponent(sessionRaw)) as { userId?: number }
-        if (sess.userId) currentUserId = Number(sess.userId)
-      } catch {}
-    }
-    if (!currentUserId) return res.status(401).send('Not authenticated')
+  // Auth: NextAuth session
+  const session = await getServerSession(req, res, authOptions)
+  const currentUserId = (session?.user as any)?.id as number | undefined
+  if (!currentUserId) return res.status(401).send('Not authenticated')
 
     const submission = await prisma.submission.findUnique({ where: { id: submissionId } })
     if (!submission) return res.status(404).send('Submission not found')
