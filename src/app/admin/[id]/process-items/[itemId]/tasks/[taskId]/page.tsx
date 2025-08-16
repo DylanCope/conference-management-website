@@ -16,7 +16,7 @@ export default async function ViewTaskPage({ params }: { params: Params }) {
   if (!Number.isFinite(confId) || !Number.isFinite(itemId) || !Number.isFinite(taskId)) {
     return (
   <main style={{ padding: 24 }}>
-        <p style={{ color: '#666' }}>Invalid URL parameters.</p>
+  <p style={{ color: 'var(--muted)' }}>Invalid URL parameters.</p>
       </main>
     )
   }
@@ -39,7 +39,7 @@ export default async function ViewTaskPage({ params }: { params: Params }) {
 
   return (
   <main style={{ padding: 24 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16, background: 'var(--card)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/auth/signout">
             <input type="hidden" name="callbackUrl" value="/submissions" />
@@ -49,17 +49,17 @@ export default async function ViewTaskPage({ params }: { params: Params }) {
             <button type="submit" className="btn">Back to Process Item</button>
           </form>
         </div>
-  <div style={{ color: '#555' }}>{user?.email ?? 'Not signed in'}</div>
+  <div style={{ color: 'var(--muted)' }}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
       <h1 style={{ fontSize: 24 }}>Task</h1>
-      <p style={{ color: '#666', marginTop: 4 }}>Type: {task.type === 'FORM' ? 'Form' : task.type}</p>
+  <p style={{ color: 'var(--muted)', marginTop: 4 }}>Type: {task.type === 'FORM' ? 'Form' : task.type}</p>
 
       {task.type === 'FORM' ? (
         <section style={{ marginTop: 16 }}>
           <h2 style={{ fontSize: 18, marginBottom: 8 }}>Questions</h2>
           {task.formQuestions.length === 0 ? (
-            <p style={{ color: '#666' }}>No questions.</p>
+            <p style={{ color: 'var(--muted)' }}>No questions.</p>
           ) : (
             <ol style={{ paddingLeft: 20 }}>
               {task.formQuestions.map((q) => (
@@ -70,7 +70,7 @@ export default async function ViewTaskPage({ params }: { params: Params }) {
                   {q.options.length > 0 && (
                     <ul style={{ marginTop: 6, paddingLeft: 18 }}>
                       {q.options.map((opt) => (
-                        <li key={opt.id} style={{ color: '#555' }}>{opt.text}</li>
+                        <li key={opt.id} style={{ color: 'var(--muted)' }}>{opt.text}</li>
                       ))}
                     </ul>
                   )}
@@ -80,7 +80,7 @@ export default async function ViewTaskPage({ params }: { params: Params }) {
           )}
         </section>
       ) : (
-        <p style={{ color: '#666', marginTop: 12 }}>Viewing for this task type is not implemented yet.</p>
+  <p style={{ color: 'var(--muted)', marginTop: 12 }}>Viewing for this task type is not implemented yet.</p>
       )}
 
       <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>

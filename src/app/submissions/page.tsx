@@ -62,8 +62,8 @@ export default async function SubmissionsPage(){
   return (
   <main style={{padding:24}}>
       <div style={{
-        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
-        justifyContent:'space-between', marginBottom:16
+        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
+        justifyContent:'space-between', marginBottom:16, background:'var(--card)'
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
@@ -96,13 +96,13 @@ export default async function SubmissionsPage(){
         {user && submissions.length > 0 && (
           <ul style={{listStyle:'none', padding:0, margin:0, display:'grid', gap:8}}>
             {submissions.map(s => (
-              <li key={s.id} style={{border:'1px solid #eee', borderRadius:8, padding:12}}>
+              <li key={s.id} style={{border:'1px solid var(--border)', borderRadius:8, padding:12, background:'var(--card)'}}>
                 <div style={{fontWeight:600}}>{s.title}</div>
-                <div style={{fontSize:14, color:'#555', marginTop:4}}>
+                <div style={{fontSize:14, color:'var(--muted)', marginTop:4}}>
                   {s.conference ? s.conference.name : 'No conference'}
                 </div>
                 {s.conference && (
-                  <div style={{fontSize:13, color:'#444', marginTop:4}}>Due tasks: {dueCounts[s.id] ?? 0}</div>
+                  <div style={{fontSize:13, color:'var(--muted)', marginTop:4}}>Due tasks: {dueCounts[s.id] ?? 0}</div>
                 )}
                 <div style={{display:'flex', gap:8, marginTop:8}}>
                   <form method="get" action={`/submissions/${s.id}`}>

@@ -12,8 +12,8 @@ export default async function AdminPage() {
   return (
   <main style={{padding:24}}>
       <div style={{
-        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
-        justifyContent:'space-between', marginBottom:16
+        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
+        justifyContent:'space-between', marginBottom:16, background:'var(--card)'
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
@@ -44,7 +44,7 @@ export default async function AdminPage() {
         ) : (
           <ul style={{listStyle:'none', padding:0, margin:0, display:'grid', gap:8}}>
             {conferences.map(c => (
-              <li key={c.id} style={{border:'1px solid #eee', borderRadius:8, padding:12}}>
+              <li key={c.id} style={{border:'1px solid var(--border)', borderRadius:8, padding:12, background:'var(--card)'}}>
                 <div style={{fontWeight:600}}>{c.name}</div>
                 <div style={{fontSize:14, color:'#555', marginTop:4}}>
                   Abstract: {fmt(c.abstractDeadline)} · Full: {fmt(c.fullSubmissionDeadline)} · Conference: {fmt(c.conferenceDate)}

@@ -99,7 +99,7 @@ export default async function SubmissionTasksPage({ params }: { params: { id: st
 
   return (
     <main style={{ padding: 24 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16, background: 'var(--card)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/auth/signout">
             <input type="hidden" name="callbackUrl" value="/submissions" />
@@ -109,27 +109,27 @@ export default async function SubmissionTasksPage({ params }: { params: { id: st
             <button type="submit" className="btn">Back to My Submissions</button>
           </form>
         </div>
-        <div style={{ color: '#555' }}>{user?.email ?? 'Not signed in'}</div>
+  <div style={{ color: 'var(--muted)' }}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
       <h1 style={{ fontSize: 24 }}>Tasks for: {submission.title}</h1>
       {!submission.conferenceId ? (
-        <p style={{ color: '#666', marginTop: 8 }}>This submission is not linked to a conference yet.</p>
+  <p style={{ color: 'var(--muted)', marginTop: 8 }}>This submission is not linked to a conference yet.</p>
       ) : tasks.length === 0 ? (
-        <p style={{ color: '#666', marginTop: 8 }}>No tasks defined for this conference.</p>
+  <p style={{ color: 'var(--muted)', marginTop: 8 }}>No tasks defined for this conference.</p>
       ) : (
         <ul style={{ listStyle: 'none', padding: 0, margin: '12px 0', display: 'grid', gap: 8 }}>
           {tasks.map((t) => (
-            <li key={t.taskId} style={{ border: '1px solid #eee', borderRadius: 8, padding: 12 }}>
+            <li key={t.taskId} style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 12, background: 'var(--card)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <div><strong>{t.processItemTitle}</strong></div>
-                  <div style={{ color: '#666', fontSize: 14, marginTop: 4 }}>Type: {t.type === 'FORM' ? 'Form' : t.type}</div>
-                  {t.dueDate && <div style={{ color: '#666', fontSize: 14, marginTop: 4 }}>Due: {t.dueDate}</div>}
+                  <div style={{ color: 'var(--muted)', fontSize: 14, marginTop: 4 }}>Type: {t.type === 'FORM' ? 'Form' : t.type}</div>
+                  {t.dueDate && <div style={{ color: 'var(--muted)', fontSize: 14, marginTop: 4 }}>Due: {t.dueDate}</div>}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
                   {t.completedAt && (
-                    <div style={{ fontSize: 12, color: '#0a7' }}>Completed</div>
+                    <div style={{ fontSize: 12, color: 'var(--success)' }}>Completed</div>
                   )}
                   <form method="get" action={`/submissions/${id}/tasks/${t.taskId}/complete`}>
                     <button type="submit" className="btn">{t.completedAt ? 'View / Edit' : 'Complete Task'}</button>

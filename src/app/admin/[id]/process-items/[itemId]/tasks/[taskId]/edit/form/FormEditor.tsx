@@ -54,11 +54,11 @@ export default function FormEditor({ initial, saveUrl, redirectTo }: { initial: 
         <button type="button" className="btn" onClick={() => addQuestion('date')}>Date</button>
       </div>
 
-      {questions.length === 0 && <p style={{ color: '#666' }}>No questions yet.</p>}
+  {questions.length === 0 && <p style={{ color: 'var(--muted)' }}>No questions yet.</p>}
 
       <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
         {questions.map((q, index) => (
-          <li key={q.id} style={{ border: '1px solid #eee', borderRadius: 8, padding: 12 }}>
+          <li key={q.id} style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 12, background:'var(--card)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <strong>Q{index + 1}</strong>
               <div style={{ display: 'flex', gap: 8 }}>
@@ -70,7 +70,7 @@ export default function FormEditor({ initial, saveUrl, redirectTo }: { initial: 
             </div>
 
             <div style={{ marginTop: 8 }}>
-              <input value={q.title} onChange={(e) => updateTitle(q.id, e.target.value)} style={{ width: '100%', padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+              <input value={q.title} onChange={(e) => updateTitle(q.id, e.target.value)} style={{ width: '100%', padding: 8, border: '1px solid var(--border)', borderRadius: 4, background:'var(--card)', color:'var(--text)' }} />
             </div>
 
             {(q.type === 'multiple' || q.type === 'dropdown') && (
@@ -78,7 +78,7 @@ export default function FormEditor({ initial, saveUrl, redirectTo }: { initial: 
                 <div style={{ display: 'grid', gap: 6 }}>
                   {(q.options || []).map((opt, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <input value={opt} onChange={(e) => updateOption(q.id, i, e.target.value)} style={{ flex: 1, padding: 8, border: '1px solid #ddd', borderRadius: 4 }} />
+                      <input value={opt} onChange={(e) => updateOption(q.id, i, e.target.value)} style={{ flex: 1, padding: 8, border: '1px solid var(--border)', borderRadius: 4, background:'var(--card)', color:'var(--text)' }} />
                       <button type="button" className="btn" onClick={() => removeOption(q.id, i)}>Remove</button>
                     </div>
                   ))}
@@ -89,9 +89,9 @@ export default function FormEditor({ initial, saveUrl, redirectTo }: { initial: 
               </div>
             )}
 
-            {q.type === 'short' && <div style={{ marginTop: 8, color: '#666' }}>Short answer (free text).</div>}
-            {q.type === 'paragraph' && <div style={{ marginTop: 8, color: '#666' }}>Paragraph (long text).</div>}
-            {q.type === 'date' && <div style={{ marginTop: 8, color: '#666' }}>Date input.</div>}
+            {q.type === 'short' && <div style={{ marginTop: 8, color: 'var(--muted)' }}>Short answer (free text).</div>}
+            {q.type === 'paragraph' && <div style={{ marginTop: 8, color: 'var(--muted)' }}>Paragraph (long text).</div>}
+            {q.type === 'date' && <div style={{ marginTop: 8, color: 'var(--muted)' }}>Date input.</div>}
           </li>
         ))}
       </ul>

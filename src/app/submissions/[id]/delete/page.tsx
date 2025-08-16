@@ -10,10 +10,10 @@ export default async function DeleteSubmissionPage({ params }: { params: { id: s
   if (!sub) return <main style={{padding:24}}>Submission not found.</main>
 
   return (
-  <main style={{padding:24}}>
+    <main style={{padding:24}}>
       <div style={{
-        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
-        justifyContent:'space-between', marginBottom:16
+        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
+        justifyContent:'space-between', marginBottom:16, background:'var(--card)'
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
@@ -24,13 +24,13 @@ export default async function DeleteSubmissionPage({ params }: { params: { id: s
             <button type="submit" className="btn">Back to My Submissions</button>
           </form>
         </div>
-        <div style={{color:'#555'}}>
+        <div style={{color:'var(--muted)'}}>
           {user?.email ?? 'Not signed in'}
         </div>
       </div>
 
       <h1 style={{fontSize:24}}>Delete Submission</h1>
-      <p>Are you sure you want to delete “{sub.title}”?</p>
+  <p>Are you sure you want to delete “{sub.title}”?</p>
 
       <div style={{display:'flex', gap:8, marginTop:12}}>
         <form method="post" action={`/api/submissions/${sub.id}?_method=DELETE`}>

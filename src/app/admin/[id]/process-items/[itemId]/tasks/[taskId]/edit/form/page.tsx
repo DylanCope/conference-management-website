@@ -61,11 +61,11 @@ export default async function EditFormTaskPage({ params }: { params: { id: strin
             <button type="submit" className="btn">Back to Process Item</button>
           </form>
         </div>
-  <div style={{ color: '#555' }}>{user?.email ?? 'Not signed in'}</div>
+  <div style={{ color: 'var(--muted)' }}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
       <h1 style={{ fontSize: 24 }}>Edit Form Task</h1>
-      <p style={{ color: '#666', marginTop: 4 }}>Update questions and options.</p>
+  <p style={{ color: 'var(--muted)', marginTop: 4 }}>Update questions and options.</p>
 
       <FormEditor
         initial={questions}

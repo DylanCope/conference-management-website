@@ -16,8 +16,8 @@ export default async function DeleteConferencePage({ params }: { params: { id: s
   return (
     <main style={{padding:24}}>
       <div style={{
-        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
-        justifyContent:'space-between', marginBottom:16
+        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
+        justifyContent:'space-between', marginBottom:16, background:'var(--card)'
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">

@@ -70,8 +70,8 @@ export default async function ConferenceSubmissionsPage({ params }: { params: { 
   return (
   <main style={{padding:24}}>
       <div style={{
-        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
-        justifyContent:'space-between', marginBottom:16
+  display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
+  justifyContent:'space-between', marginBottom:16, background:'var(--card)'
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
@@ -82,7 +82,7 @@ export default async function ConferenceSubmissionsPage({ params }: { params: { 
             <button type="submit" className="btn">Manage Conferences</button>
           </form>
         </div>
-        <div style={{color:'#555'}}>
+  <div style={{color:'var(--muted)'}}>
           {user?.email ?? 'Not signed in'}
         </div>
       </div>
@@ -90,7 +90,7 @@ export default async function ConferenceSubmissionsPage({ params }: { params: { 
       <h1 style={{fontSize:24}}>Submissions — {conf.name}</h1>
       <div style={{marginTop:12}}>
         {submissions.length === 0 ? (
-          <p style={{color:'#666'}}>No submissions yet for this conference.</p>
+          <p style={{color:'var(--muted)'}}>No submissions yet for this conference.</p>
         ) : (
           <ul style={{listStyle:'none', padding:0, margin:0, display:'grid', gap:8}}>
             {submissions.map(s => {
@@ -98,12 +98,12 @@ export default async function ConferenceSubmissionsPage({ params }: { params: { 
               const activeCompleted = activeCompletedBySubmission.get(s.id) || 0
               const hasIncomplete = totalActiveTasks > 0 && activeCompleted < totalActiveTasks
               return (
-              <li key={s.id} style={{border:'1px solid #eee', borderRadius:8, padding:12, background: hasIncomplete ? '#fff0f0' : '#fff'}}>
+              <li key={s.id} style={{border:'1px solid var(--border)', borderRadius:8, padding:12, background: hasIncomplete ? 'color-mix(in oklab, var(--danger) 10%, var(--card))' : 'var(--card)'}}>
                 <div style={{fontWeight:600}}>{s.title}</div>
-                <div style={{fontSize:14, color:'#555', marginTop:4}}>
+                <div style={{fontSize:14, color:'var(--muted)', marginTop:4}}>
                   Owner: {s.user?.email ?? 'Unknown'}
                 </div>
-                <div style={{fontSize:13, color: hasIncomplete ? '#c00' : '#444', marginTop:4}}>
+                <div style={{fontSize:13, color: hasIncomplete ? 'var(--danger)' : 'var(--muted)', marginTop:4}}>
                   Tasks: {completed} / {totalTasks}
                 </div>
                 <div style={{display:'flex', gap:8, marginTop:8}}>

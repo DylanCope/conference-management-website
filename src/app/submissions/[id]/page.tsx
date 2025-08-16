@@ -13,8 +13,8 @@ export default async function SubmissionDetailPage({ params }: { params: { id: s
   return (
   <main style={{padding:24}}>
       <div style={{
-        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
-        justifyContent:'space-between', marginBottom:16
+        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
+        justifyContent:'space-between', marginBottom:16, background:'var(--card)'
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
@@ -25,16 +25,16 @@ export default async function SubmissionDetailPage({ params }: { params: { id: s
             <button type="submit" className="btn">Back to Submissions</button>
           </form>
         </div>
-        <div style={{color:'#555'}}>{user?.email ?? 'Not signed in'}</div>
+  <div style={{color:'var(--muted)'}}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
       <h1 style={{fontSize:24}}>Submission</h1>
       <form method="post" action={`/api/submissions/${id}?_method=PUT`} style={{maxWidth:640, marginTop:12}}>
         <label style={{display:'block', marginBottom:6}}>Title</label>
-        <input name="title" defaultValue={sub.title} style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}} />
+  <input name="title" defaultValue={sub.title} style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
 
         <label style={{display:'block', marginTop:10}}>Conference</label>
-        <select name="conferenceId" defaultValue={sub.conference?.id ?? ''} style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}}>
+  <select name="conferenceId" defaultValue={sub.conference?.id ?? ''} style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}}>
           <option value="">Select a conference…</option>
           {conferences.map(c => (
             <option key={c.id} value={c.id}>{c.name}</option>
@@ -42,13 +42,13 @@ export default async function SubmissionDetailPage({ params }: { params: { id: s
         </select>
 
         <label style={{display:'block', marginTop:8}}>First authors</label>
-        <input name="firstAuthors" defaultValue={sub.firstAuthors ?? ''} style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}} />
+  <input name="firstAuthors" defaultValue={sub.firstAuthors ?? ''} style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
 
         <label style={{display:'block', marginTop:8}}>Senior authors</label>
-        <input name="seniorAuthors" defaultValue={sub.seniorAuthors ?? ''} style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}} />
+  <input name="seniorAuthors" defaultValue={sub.seniorAuthors ?? ''} style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
 
         <label style={{display:'block', marginTop:8}}>Overleaf link</label>
-        <input name="overleaf" defaultValue={sub.overleaf ?? ''} style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}} />
+  <input name="overleaf" defaultValue={sub.overleaf ?? ''} style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
 
         <div style={{marginTop:12}}>
           <button type="submit" className="btn">Save</button>

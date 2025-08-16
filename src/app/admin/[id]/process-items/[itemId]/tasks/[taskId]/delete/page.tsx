@@ -28,7 +28,7 @@ export default async function DeleteTaskPage({ params }: { params: { id: string;
   if (!Number.isFinite(confId) || !Number.isFinite(itemId) || !Number.isFinite(taskId)) {
     return (
   <main style={{ padding: 24 }}>
-        <p style={{ color: '#666' }}>Invalid URL parameters.</p>
+  <p style={{ color: 'var(--muted)' }}>Invalid URL parameters.</p>
       </main>
     )
   }
@@ -46,7 +46,7 @@ export default async function DeleteTaskPage({ params }: { params: { id: string;
 
   return (
     <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16, background: 'var(--card)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/logout">
             <button type="submit" className="btn">Log out</button>
@@ -55,7 +55,7 @@ export default async function DeleteTaskPage({ params }: { params: { id: string;
             <button type="submit" className="btn">Back to Process Item</button>
           </form>
         </div>
-  <div style={{ color: '#555' }}>{user?.email ?? 'Not signed in'}</div>
+  <div style={{ color: 'var(--muted)' }}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
       <h1 style={{ fontSize: 24 }}>Delete Task</h1>

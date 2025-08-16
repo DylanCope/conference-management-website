@@ -17,10 +17,10 @@ export default async function NewSubmissionPage(){
 
       <form method="post" action="/api/submissions" style={{maxWidth:640, marginTop:12}}>
         <label style={{display:'block', marginBottom:6}}>Title</label>
-        <input name="title" required style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}} />
+  <input name="title" required style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
 
         <label style={{display:'block', marginTop:10}}>Conference</label>
-        <select name="conferenceId" required disabled={!hasConfs} style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}}>
+  <select name="conferenceId" required disabled={!hasConfs} style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}}>
           <option value="">Select a conference…</option>
           {conferences.map(c => (
             <option key={c.id} value={c.id}>{c.name}</option>

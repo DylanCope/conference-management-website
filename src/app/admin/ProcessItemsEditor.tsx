@@ -102,7 +102,7 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
   return (
     <section style={{ marginTop: 24 }}>
       <h2 style={{ fontSize: 18, marginBottom: 8 }}>Process items</h2>
-      <p style={{ color: '#666', marginTop: 0 }}>Drag the handle to reorder. Add, edit, or delete items. (Changes are not yet saved.)</p>
+  <p style={{ color: 'var(--muted)', marginTop: 0 }}>Drag the handle to reorder. Add, edit, or delete items.</p>
 
       <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 8 }}>
         {items.map(item => {
@@ -115,10 +115,10 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
               onDragOver={onDragOver}
               onDrop={(e) => onDrop(e, item.id)}
               style={{
-                border: '1px solid #eee',
+                border: '1px solid var(--border)',
                 borderRadius: 8,
                 padding: 12,
-                background: isDragging ? '#fafafa' : 'white',
+                background: isDragging ? 'color-mix(in oklab, var(--muted) 8%, var(--card))' : 'var(--card)',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'space-between' }}>
@@ -139,7 +139,7 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
                         autoFocus
                         value={editTitle}
                         onChange={(e) => setEditTitle(e.target.value)}
-                        style={{ flex: 1, padding: 8, border: '1px solid #ddd', borderRadius: 4 }}
+                        style={{ flex: 1, padding: 8, border: '1px solid var(--border)', borderRadius: 4, background:'var(--card)', color:'var(--text)' }}
                       />
                       <button type="submit" className="btn">Save</button>
                       <button type="button" onClick={cancelEdit} className="btn">Cancel</button>
@@ -186,9 +186,6 @@ export default function ProcessItemsEditor({ conferenceId, initialItems = [] }: 
           </form>
       </div>
 
-      <div style={{ marginTop: 8, color: '#888', fontSize: 12 }}>
-        Note: This list is local to the page. Dedicated create/edit pages let you enter full details; saving to the database will come next.
-      </div>
     </section>
   )
 }

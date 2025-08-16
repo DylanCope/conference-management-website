@@ -20,8 +20,8 @@ export default async function EditConferencePage({ params }: { params: { id: str
   return (
     <main style={{padding:24}}>
       <div style={{
-        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
-        justifyContent:'space-between', marginBottom:16
+        display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
+        justifyContent:'space-between', marginBottom:16, background:'var(--card)'
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
@@ -40,10 +40,10 @@ export default async function EditConferencePage({ params }: { params: { id: str
       <h1 style={{fontSize:24}}>Edit Conference</h1>
       <form method="post" action={`/api/conferences/${id}?_method=PUT`} style={{maxWidth:640, marginTop:12}}>
         <label style={{display:'block', marginBottom:6}}>Name</label>
-        <input defaultValue={conf.name} name="name" style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}} />
+  <input defaultValue={conf.name} name="name" style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
 
         <label style={{display:'block', marginTop:10}}>Website</label>
-        <input defaultValue={conf.website ?? ''} name="website" style={{width:'100%', padding:8, border:'1px solid #ddd', borderRadius:4}} />
+  <input defaultValue={conf.website ?? ''} name="website" style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
 
         <label style={{display:'block', marginTop:10}}>Abstract deadline</label>
         <input name="abstractDeadline" type="date" defaultValue={toInputDate(conf.abstractDeadline)} />

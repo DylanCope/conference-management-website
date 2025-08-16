@@ -25,7 +25,7 @@ export default async function NewFormTaskPage({ params }: { params: { id: string
 
   return (
     <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16, background: 'var(--card)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/logout">
             <button type="submit" className="btn">Log out</button>
@@ -34,11 +34,11 @@ export default async function NewFormTaskPage({ params }: { params: { id: string
             <button type="submit" className="btn">Back to Process Item</button>
           </form>
         </div>
-  <div style={{ color: '#555' }}>{user?.email ?? 'Not signed in'}</div>
+  <div style={{ color: 'var(--muted)' }}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
   <h1 style={{ fontSize: 24 }}>New Form Task</h1>
-      <p style={{ color: '#666', marginTop: 4 }}>Build a form consisting of questions your team needs to fill in.</p>
+  <p style={{ color: 'var(--muted)', marginTop: 4 }}>Build a form consisting of questions your team needs to fill in.</p>
 
   <FormBuilder processItemId={Number(itemId)} conferenceId={confId} />
     </main>

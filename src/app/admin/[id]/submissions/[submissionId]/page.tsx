@@ -60,14 +60,14 @@ export default async function AdminSubmissionDetail({ params }: { params: Params
     return (
       <div style={{ display: 'grid', gap: 8 }}>
         {task.formQuestions.length === 0 ? (
-          <div style={{ color: '#666' }}>No questions.</div>
+          <div style={{ color: 'var(--muted)' }}>No questions.</div>
         ) : (
           task.formQuestions.map((q: any, idx: number) => {
             const val = answered[String(q.id)]
             return (
-              <div key={q.id} style={{ border: '1px solid #eee', borderRadius: 8, padding: 10 }}>
-                <div style={{ fontWeight: 600 }}>Q{idx + 1}. {q.title} {q.required && <span style={{ color: '#c00' }}>*</span>}</div>
-                <div style={{ marginTop: 6, color: val ? '#111' : '#c00' }}>
+              <div key={q.id} style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 10, background:'var(--card)' }}>
+                <div style={{ fontWeight: 600 }}>Q{idx + 1}. {q.title} {q.required && <span style={{ color: 'var(--danger)' }}>*</span>}</div>
+                <div style={{ marginTop: 6, color: val ? 'var(--text)' : 'var(--danger)' }}>
                   {val ? String(val) : 'No answer'}
                 </div>
               </div>
@@ -80,7 +80,7 @@ export default async function AdminSubmissionDetail({ params }: { params: Params
 
   return (
   <main style={{ padding: 24 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16, background: 'var(--card)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/auth/signout">
             <input type="hidden" name="callbackUrl" value="/submissions" />
@@ -93,15 +93,15 @@ export default async function AdminSubmissionDetail({ params }: { params: Params
             <button type="submit" className="btn">Back to Conference</button>
           </form>
         </div>
-        <div style={{ color: '#555' }}>{user?.email ?? 'Not signed in'}</div>
+  <div style={{ color: 'var(--muted)' }}>{user?.email ?? 'Not signed in'}</div>
       </div>
 
       <h1 style={{ fontSize: 24 }}>Submission Details</h1>
-      <div style={{ marginTop: 8, color: '#555' }}>Conference: {conf.name}</div>
+  <div style={{ marginTop: 8, color: 'var(--muted)' }}>Conference: {conf.name}</div>
 
-      <section style={{ marginTop: 16, border: '1px solid #eee', borderRadius: 8, padding: 12 }}>
+  <section style={{ marginTop: 16, border: '1px solid var(--border)', borderRadius: 8, padding: 12, background: 'var(--card)' }}>
         <h2 style={{ fontSize: 18, marginBottom: 8 }}>{submission.title}</h2>
-        <div style={{ color: '#555' }}>Owner: {submission.user?.email ?? 'Unknown'}</div>
+  <div style={{ color: 'var(--muted)' }}>Owner: {submission.user?.email ?? 'Unknown'}</div>
         {submission.firstAuthors && (
           <div style={{ marginTop: 4 }}>First authors: {submission.firstAuthors}</div>
         )}
@@ -113,23 +113,27 @@ export default async function AdminSubmissionDetail({ params }: { params: Params
         )}
       </section>
 
-      <section style={{ marginTop: 20 }}>
+  <section style={{ marginTop: 20 }}>
         <h2 style={{ fontSize: 18, marginBottom: 8 }}>Tasks</h2>
         {tasks.length === 0 ? (
-          <p style={{ color: '#666' }}>No tasks defined for this conference.</p>
+          <p style={{ color: 'var(--muted)' }}>No tasks defined for this conference.</p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
             {tasks.map((t) => {
               const completed = !!ansByTask.get(t.id)
               const isActive = activeItemIds.has(t.processItemId)
-              const bg = completed ? '#fff' : (isActive ? '#fff0f0' : '#f6f6f6')
-              const statusColor = completed ? '#0a7' : (isActive ? '#c00' : '#777')
+              const bg = completed
+                ? 'var(--card)'
+                : (isActive
+                    ? 'color-mix(in oklab, var(--danger) 10%, var(--card))'
+                    : 'color-mix(in oklab, var(--muted) 10%, var(--card))')
+              const statusColor = completed ? 'var(--success)' : (isActive ? 'var(--danger)' : 'var(--muted)')
               return (
-                <li key={t.id} style={{ border: '1px solid #eee', borderRadius: 8, padding: 12, background: bg }}>
+                <li key={t.id} style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 12, background: bg }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                       <div><strong>{t.processItem.title}</strong></div>
-                      <div style={{ color: '#666', fontSize: 14, marginTop: 4 }}>Type: {t.type === 'FORM' ? 'Form' : t.type}</div>
+                      <div style={{ color: 'var(--muted)', fontSize: 14, marginTop: 4 }}>Type: {t.type === 'FORM' ? 'Form' : t.type}</div>
                     </div>
                     <div style={{ fontSize: 12, color: statusColor }}>{completed ? 'Completed' : (isActive ? 'Incomplete' : 'Inactive') }</div>
                   </div>
@@ -139,7 +143,7 @@ export default async function AdminSubmissionDetail({ params }: { params: Params
                       {renderFormAnswers(t)}
                     </div>
                   ) : (
-                    <div style={{ marginTop: 10, color: '#666' }}>Rendering for this task type is not implemented yet.</div>
+                    <div style={{ marginTop: 10, color: 'var(--muted)' }}>Rendering for this task type is not implemented yet.</div>
                   )}
                 </li>
               )

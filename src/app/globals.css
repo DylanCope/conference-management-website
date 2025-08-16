@@ -65,3 +65,48 @@ html {
 	}
 }
 
+/* Theme variables */
+:root {
+	--bg: #ffffff;
+	--text: #111111;
+	--card: #ffffff;
+	--border: #e5e7eb; /* tailwind gray-200 */
+	--muted: #4b5563; /* gray-600 for light */
+	--danger: #ef4444; /* red-500 */
+	--success: #10b981; /* emerald-500 */
+}
+
+.dark {
+	/* Using user-provided dark palette */
+	--bg: #22252A; /* DARKEST_DARK_GRAY */
+	--text: #ADB2B1; /* TEXT_COLOR */
+	--card: #292C33; /* LIGHTEST_DARK_GRAY */
+	--border: #353941;
+	--muted: #c0c6c5;
+	--danger: #ff6b6b;
+	--success: #34d399; /* emerald-400 */
+}
+
+/* Apply variables */
+html, body {
+	background-color: var(--bg);
+	color: var(--text);
+}
+
+.page-wrap {
+	background-color: var(--card);
+	border-radius: 12px;
+}
+
+/* Button colors adapt to theme */
+.btn {
+	background: color-mix(in oklab, var(--card) 92%, var(--text));
+	border-color: var(--border);
+	color: var(--text);
+}
+.btn:hover { background: color-mix(in oklab, var(--card) 86%, var(--text)); }
+
+/* Prevent transition flash on first paint when toggling theme class */
+* { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+html.theme-init * { transition: none !important; }
+
