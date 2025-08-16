@@ -1,21 +1,7 @@
 import prisma from '../../../../../lib/prisma'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
-import { cookies } from 'next/headers'
-
-async function getCurrentUser() {
-  const cookieStore = await cookies()
-  const sessionCookie = cookieStore.get('session')?.value
-  if (!sessionCookie) return null
-  try {
-    const session = JSON.parse(sessionCookie) as { userId?: number }
-    if (!session.userId) return null
-    const user = await prisma.user.findUnique({ where: { id: session.userId } })
-    return user
-  } catch {
-    return null
-  }
-}
+import { getCurrentUser } from '../../../../lib/auth'
 
 export default async function EditProcessItemPage({ params }: { params: { id: string, itemId: string } }) {
   const user = await getCurrentUser()
@@ -66,7 +52,8 @@ export default async function EditProcessItemPage({ params }: { params: { id: st
   <main style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <form method="post" action="/api/logout">
+          <form method="post" action="/api/auth/signout">
+            <input type="hidden" name="callbackUrl" value="/" />
             <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action={`/admin/${confId}`}>

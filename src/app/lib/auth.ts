@@ -1,14 +1,13 @@
-import { cookies } from 'next/headers'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../../auth'
 import prisma from '../../lib/prisma'
 
 export async function getCurrentUser() {
-  const cookieStore = await cookies()
-  const sessionCookie = cookieStore.get('session')?.value
-  if (!sessionCookie) return null
+  const session = await getServerSession(authOptions as any)
+  const id = (session?.user as any)?.id
+  if (!id) return null
   try {
-    const session = JSON.parse(sessionCookie) as { userId?: number }
-    if (!session.userId) return null
-    const user = await prisma.user.findUnique({ where: { id: session.userId } })
+    const user = await prisma.user.findUnique({ where: { id } })
     return user
   } catch {
     return null

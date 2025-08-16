@@ -1,21 +1,7 @@
-import { cookies } from 'next/headers'
 import prisma from '../../../../../lib/prisma'
+import { getCurrentUser } from '../../../../lib/auth'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
-
-async function getCurrentUser() {
-  const cookieStore = await cookies()
-  const sessionCookie = cookieStore.get('session')?.value
-  if (!sessionCookie) return null
-  try {
-    const session = JSON.parse(sessionCookie) as { userId?: number }
-    if (!session.userId) return null
-    const user = await prisma.user.findUnique({ where: { id: session.userId } })
-    return user
-  } catch {
-    return null
-  }
-}
 
 type Params = { id: string; submissionId: string }
 
@@ -96,7 +82,8 @@ export default async function AdminSubmissionDetail({ params }: { params: Params
   <main style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <form method="post" action="/api/logout">
+          <form method="post" action="/api/auth/signout">
+            <input type="hidden" name="callbackUrl" value="/" />
             <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action={`/admin/${confId}/submissions`}>

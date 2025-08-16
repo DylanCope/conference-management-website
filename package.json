@@ -15,6 +15,7 @@
     "@prisma/client": "latest",
     "autoprefixer": "latest",
     "cookie": "^1.0.2",
+  "next-auth": "^4.24.7",
     "next": "latest",
     "postcss": "latest",
     "react": "latest",
