@@ -1,6 +1,6 @@
 export default function NewConferencePage() {
   return (
-    <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>
+  <main style={{padding:24}}>
       <h1 style={{fontSize:24}}>Create Conference</h1>
       <form method="post" action="/api/conferences" style={{maxWidth:640, marginTop:12}}>
         <label style={{display:'block', marginBottom:6}}>Name</label>

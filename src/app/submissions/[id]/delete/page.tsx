@@ -21,10 +21,10 @@ export default async function DeleteSubmissionPage({ params }: Props) {
   const user = await getCurrentUser()
   const id = Number(params.id)
   const sub = await prisma.submission.findUnique({ where: { id } })
-  if (!sub) return <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>Submission not found.</main>
+  if (!sub) return <main style={{padding:24}}>Submission not found.</main>
 
   return (
-    <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>
+  <main style={{padding:24}}>
       <div style={{
         display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
         justifyContent:'space-between', marginBottom:16

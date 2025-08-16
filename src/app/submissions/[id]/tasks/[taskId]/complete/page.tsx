@@ -24,15 +24,15 @@ export default async function CompleteTaskPage({ params }: { params: Params }) {
   const taskId = Number(taskIdStr)
 
   if (!Number.isFinite(submissionId) || !Number.isFinite(taskId)) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Invalid URL parameters.</main>
+    return <main style={{ padding: 24 }}>Invalid URL parameters.</main>
   }
 
   const submission = await prisma.submission.findUnique({ where: { id: submissionId }, include: { conference: true } })
   if (!submission) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Submission not found.</main>
+    return <main style={{ padding: 24 }}>Submission not found.</main>
   }
   if (!user || submission.userId !== user.id) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>You do not have access to this submission.</main>
+    return <main style={{ padding: 24 }}>You do not have access to this submission.</main>
   }
 
   const task = await prisma.task.findUnique({
@@ -40,12 +40,12 @@ export default async function CompleteTaskPage({ params }: { params: Params }) {
     include: { processItem: true, formQuestions: { include: { options: true }, orderBy: { order: 'asc' } } },
   })
   if (!task) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Task not found.</main>
+    return <main style={{ padding: 24 }}>Task not found.</main>
   }
 
   // Ensure task belongs to the same conference as the submission
   if (!submission.conferenceId || task.processItem.conferenceId !== submission.conferenceId) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Task does not belong to this submission's conference.</main>
+  return <main style={{ padding: 24 }}>Task does not belong to this submission's conference.</main>
   }
 
   const existing = await (prisma as any).taskSubmission.findUnique({
@@ -80,7 +80,7 @@ export default async function CompleteTaskPage({ params }: { params: Params }) {
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/logout">

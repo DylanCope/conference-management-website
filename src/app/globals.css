@@ -6,6 +6,13 @@ html, body {
 	height: 100%;
 }
 
+/* Improve text rendering consistency */
+html {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
 /* Simple, consistent button styling (Google Forms–like) */
 :root {
 	--btn-bg: #f7f7f7;

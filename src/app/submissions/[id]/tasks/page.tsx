@@ -24,15 +24,15 @@ export default async function SubmissionTasksPage({ params }: { params: Promise<
   const { id } = await params
   const subId = Number(id)
   if (!Number.isFinite(subId)) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Invalid submission id.</main>
+    return <main style={{ padding: 24 }}>Invalid submission id.</main>
   }
 
   const submission = await prisma.submission.findUnique({ where: { id: subId }, include: { conference: true, user: true } })
   if (!submission) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Submission not found.</main>
+    return <main style={{ padding: 24 }}>Submission not found.</main>
   }
   if (!user || submission.userId !== user.id) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>You do not have access to this submission.</main>
+    return <main style={{ padding: 24 }}>You do not have access to this submission.</main>
   }
 
   // Gather process items and tasks for the submission's conference
@@ -108,7 +108,7 @@ export default async function SubmissionTasksPage({ params }: { params: Promise<
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+    <main style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/logout">

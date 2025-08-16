@@ -78,11 +78,11 @@ export default async function ConferenceSubmissionsPage({ params }: Props) {
   }
 
   if (!conf) {
-    return <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>Conference not found.</main>
+  return <main style={{padding:24}}>Conference not found.</main>
   }
 
   return (
-    <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>
+  <main style={{padding:24}}>
       <div style={{
         display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
         justifyContent:'space-between', marginBottom:16

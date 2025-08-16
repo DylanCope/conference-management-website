@@ -25,7 +25,7 @@ export default async function DeleteTaskPage({ params }: { params: Promise<{ id:
 
   if (!Number.isFinite(confId) || !Number.isFinite(itemId) || !Number.isFinite(taskId)) {
     return (
-      <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
         <p style={{ color: '#666' }}>Invalid URL parameters.</p>
       </main>
     )
@@ -34,7 +34,7 @@ export default async function DeleteTaskPage({ params }: { params: Promise<{ id:
   const task = await prisma.task.findUnique({ where: { id: taskId } })
   if (!task || task.processItemId !== itemId) {
     return (
-      <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
         <p>Task not found.</p>
       </main>
     )

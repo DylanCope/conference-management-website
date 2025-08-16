@@ -4,7 +4,7 @@ export default async function NewSubmissionPage(){
   const conferences = await prisma.conference.findMany({ orderBy: { name: 'asc' } })
   const hasConfs = conferences.length > 0
   return (
-    <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>
+  <main style={{padding:24}}>
       <h1 style={{fontSize:24}}>Create Submission</h1>
 
       {!hasConfs && (

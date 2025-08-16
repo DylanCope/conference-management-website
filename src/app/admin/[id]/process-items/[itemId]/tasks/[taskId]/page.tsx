@@ -27,7 +27,7 @@ export default async function ViewTaskPage({ params }: { params: Params }) {
 
   if (!Number.isFinite(confId) || !Number.isFinite(itemId) || !Number.isFinite(taskId)) {
     return (
-      <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
         <p style={{ color: '#666' }}>Invalid URL parameters.</p>
       </main>
     )
@@ -43,14 +43,14 @@ export default async function ViewTaskPage({ params }: { params: Params }) {
 
   if (!task || task.processItemId !== itemId) {
     return (
-      <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
         <p>Task not found.</p>
       </main>
     )
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/logout">

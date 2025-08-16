@@ -35,7 +35,7 @@ export default async function EditFormTaskPage({ params }: { params: Promise<{ i
   const taskId = Number(taskIdStr)
 
   if (!Number.isFinite(confId) || !Number.isFinite(itemId) || !Number.isFinite(taskId)) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Invalid URL parameters.</main>
+  return <main style={{ padding: 24 }}>Invalid URL parameters.</main>
   }
 
   const task = await prisma.task.findUnique({
@@ -43,13 +43,13 @@ export default async function EditFormTaskPage({ params }: { params: Promise<{ i
     include: { formQuestions: { include: { options: true }, orderBy: { order: 'asc' } } },
   })
   if (!task || String(task.type) !== 'FORM' || task.processItemId !== itemId) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Task not found or not editable.</main>
+  return <main style={{ padding: 24 }}>Task not found or not editable.</main>
   }
 
   const questions = toBuilderModel(task)
 
   return (
-    <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/logout">

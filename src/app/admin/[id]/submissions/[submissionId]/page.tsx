@@ -23,13 +23,13 @@ export default async function AdminSubmissionDetail({ params }: { params: Params
   const confId = Number(idStr)
   const submissionId = Number(subStr)
   if (!Number.isFinite(confId) || !Number.isFinite(submissionId)) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Invalid URL parameters.</main>
+  return <main style={{ padding: 24 }}>Invalid URL parameters.</main>
   }
 
   const conf = await prisma.conference.findUnique({ where: { id: confId } })
   const submission = await prisma.submission.findUnique({ where: { id: submissionId }, include: { user: true, conference: true } })
   if (!conf || !submission || submission.conferenceId !== confId) {
-    return <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>Submission not found for this conference.</main>
+  return <main style={{ padding: 24 }}>Submission not found for this conference.</main>
   }
 
   // Gather process items and tasks for this conference
@@ -91,7 +91,7 @@ export default async function AdminSubmissionDetail({ params }: { params: Params
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/logout">

@@ -22,7 +22,7 @@ export default async function EditProcessItemPage({ params }: { params: Promise<
   const pItemId = Number(itemId)
   if (!Number.isFinite(pItemId)) {
     return (
-      <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
         <p style={{ color: '#666' }}>Invalid process item id.</p>
       </main>
     )
@@ -32,7 +32,7 @@ export default async function EditProcessItemPage({ params }: { params: Promise<
   const processItem = await prisma.processItem.findUnique({ where: { id: pItemId } })
   if (!processItem) {
     return (
-      <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
         <p>Process item not found.</p>
       </main>
     )
@@ -61,7 +61,7 @@ export default async function EditProcessItemPage({ params }: { params: Promise<
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: 'Inter, system-ui, Arial' }}>
+  <main style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid #eee', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/logout">

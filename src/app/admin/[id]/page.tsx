@@ -26,13 +26,13 @@ export default async function EditConferencePage({ params }: Props) {
   const processItems = await prisma.processItem.findMany({ where: { conferenceId: id }, orderBy: { order: 'asc' } })
 
   if (!conf) {
-    return <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>Conference not found.</main>
+    return <main style={{padding:24}}>Conference not found.</main>
   }
 
   const toInputDate = (d?: Date | null) => d ? new Date(d).toISOString().slice(0,10) : ''
 
   return (
-    <main style={{padding:24,fontFamily:'Inter, system-ui, Arial'}}>
+    <main style={{padding:24}}>
       <div style={{
         display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid #eee', borderRadius:8,
         justifyContent:'space-between', marginBottom:16
