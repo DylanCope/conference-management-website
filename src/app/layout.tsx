@@ -18,7 +18,9 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={inter.className}>
 			<body className="min-h-screen bg-white text-gray-900">
-				{children}
+				<div className="page-wrap">
+					{children}
+				</div>
 			</body>
 		</html>
 	)

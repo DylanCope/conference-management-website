@@ -50,3 +50,18 @@ html {
 	cursor: not-allowed;
 }
 
+/* Responsive page container: add side margins on large screens only */
+.page-wrap {
+	margin: 0 auto;
+	padding: 0 16px;
+	max-width: 100%;
+}
+
+@media (min-width: 1024px) { /* lg+ */
+	.page-wrap {
+		max-width: 1120px; /* ~max-w-6xl feel */
+		padding-left: 32px;
+		padding-right: 32px;
+	}
+}
+
