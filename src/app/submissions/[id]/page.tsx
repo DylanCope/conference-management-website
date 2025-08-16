@@ -15,9 +15,7 @@ async function getCurrentUser() {
   }
 }
 
-type Props = { params: { id: string } }
-
-export default async function SubmissionDetailPage({ params }: Props){
+export default async function SubmissionDetailPage({ params }: { params: { id: string } }){
   const user = await getCurrentUser()
   const id = Number(params.id)
   const sub = await prisma.submission.findUnique({ where: { id }, include: { conference: true } })

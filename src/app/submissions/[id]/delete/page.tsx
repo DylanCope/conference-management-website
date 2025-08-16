@@ -15,9 +15,7 @@ async function getCurrentUser() {
   }
 }
 
-type Props = { params: { id: string } }
-
-export default async function DeleteSubmissionPage({ params }: Props) {
+export default async function DeleteSubmissionPage({ params }: { params: { id: string } }) {
   const user = await getCurrentUser()
   const id = Number(params.id)
   const sub = await prisma.submission.findUnique({ where: { id } })

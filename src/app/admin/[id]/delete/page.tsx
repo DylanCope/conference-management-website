@@ -15,9 +15,7 @@ async function getCurrentUser() {
   }
 }
 
-type Props = { params: { id: string } }
-
-export default async function DeleteConferencePage({ params }: Props) {
+export default async function DeleteConferencePage({ params }: { params: { id: string } }) {
   const user = await getCurrentUser()
   const { id: idStr } = params
   const id = Number(idStr)
