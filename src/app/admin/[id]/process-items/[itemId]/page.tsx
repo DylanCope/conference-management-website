@@ -15,9 +15,9 @@ async function getCurrentUser() {
   }
 }
 
-export default async function EditProcessItemPage({ params }: { params: Promise<{ id: string, itemId: string }> }) {
+export default async function EditProcessItemPage({ params }: { params: { id: string, itemId: string } }) {
   const user = await getCurrentUser()
-  const { id: idStr, itemId } = await params
+  const { id: idStr, itemId } = params
   const confId = Number(idStr)
   const pItemId = Number(itemId)
   if (!Number.isFinite(pItemId)) {

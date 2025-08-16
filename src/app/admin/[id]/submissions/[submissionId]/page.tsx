@@ -15,11 +15,11 @@ async function getCurrentUser() {
   }
 }
 
-type Params = Promise<{ id: string; submissionId: string }>
+type Params = { id: string; submissionId: string }
 
 export default async function AdminSubmissionDetail({ params }: { params: Params }) {
   const user = await getCurrentUser()
-  const { id: idStr, submissionId: subStr } = await params
+  const { id: idStr, submissionId: subStr } = params
   const confId = Number(idStr)
   const submissionId = Number(subStr)
   if (!Number.isFinite(confId) || !Number.isFinite(submissionId)) {

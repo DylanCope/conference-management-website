@@ -19,9 +19,9 @@ function toInputDate(d?: Date | null) {
   return d ? new Date(d).toISOString().slice(0,10) : ''
 }
 
-export default async function SubmissionTasksPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function SubmissionTasksPage({ params }: { params: { id: string } }) {
   const user = await getCurrentUser()
-  const { id } = await params
+  const { id } = params
   const subId = Number(id)
   if (!Number.isFinite(subId)) {
     return <main style={{ padding: 24 }}>Invalid submission id.</main>

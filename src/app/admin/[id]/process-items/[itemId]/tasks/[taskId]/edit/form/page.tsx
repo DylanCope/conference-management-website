@@ -27,9 +27,9 @@ function toBuilderModel(task: any) {
   }))
 }
 
-export default async function EditFormTaskPage({ params }: { params: Promise<{ id: string; itemId: string; taskId: string }> }) {
+export default async function EditFormTaskPage({ params }: { params: { id: string; itemId: string; taskId: string } }) {
   const user = await getCurrentUser()
-  const { id: idStr, itemId: itemIdStr, taskId: taskIdStr } = await params
+  const { id: idStr, itemId: itemIdStr, taskId: taskIdStr } = params
   const confId = Number(idStr)
   const itemId = Number(itemIdStr)
   const taskId = Number(taskIdStr)

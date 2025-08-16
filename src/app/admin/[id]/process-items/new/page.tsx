@@ -16,9 +16,9 @@ async function getCurrentUser() {
   }
 }
 
-export default async function NewProcessItemPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function NewProcessItemPage({ params }: { params: { id: string } }) {
   const user = await getCurrentUser()
-  const { id: idStr } = await params
+    const { id: idStr } = params
   const confId = Number(idStr)
 
   return (

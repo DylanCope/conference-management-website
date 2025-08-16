@@ -15,12 +15,12 @@ async function getCurrentUser() {
   }
 }
 
-type Params = Promise<{ id: string; itemId: string; taskId: string }>
+type Params = { id: string; itemId: string; taskId: string }
 
 export default async function ViewTaskPage({ params }: { params: Params }) {
   const user = await getCurrentUser()
 
-  const { id: idStr, itemId: itemIdStr, taskId: taskIdStr } = await params
+  const { id: idStr, itemId: itemIdStr, taskId: taskIdStr } = params
   const confId = Number(idStr)
   const itemId = Number(itemIdStr)
   const taskId = Number(taskIdStr)

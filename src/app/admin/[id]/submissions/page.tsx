@@ -15,11 +15,11 @@ async function getCurrentUser() {
   }
 }
 
-type Props = { params: Promise<{ id: string }> }
+type Props = { params: { id: string } }
 
 export default async function ConferenceSubmissionsPage({ params }: Props) {
   const user = await getCurrentUser()
-  const { id: idStr } = await params
+  const { id: idStr } = params
   const id = Number(idStr)
   const conf = await prisma.conference.findUnique({ where: { id } })
   const submissions = await prisma.submission.findMany({ where: { conferenceId: id }, include: { user: true }, orderBy: { createdAt: 'desc' } })

@@ -15,11 +15,11 @@ async function getCurrentUser() {
   }
 }
 
-type Props = { params: Promise<{ id: string }> }
+type Props = { params: { id: string } }
 
 export default async function DeleteConferencePage({ params }: Props) {
   const user = await getCurrentUser()
-  const { id: idStr } = await params
+  const { id: idStr } = params
   const id = Number(idStr)
   const conf = await prisma.conference.findUnique({ where: { id } })
 

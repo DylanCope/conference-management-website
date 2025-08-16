@@ -15,11 +15,11 @@ async function getCurrentUser() {
   }
 }
 
-type Params = Promise<{ id: string; taskId: string }>
+type Params = { id: string; taskId: string }
 
 export default async function CompleteTaskPage({ params }: { params: Params }) {
   const user = await getCurrentUser()
-  const { id: idStr, taskId: taskIdStr } = await params
+  const { id: idStr, taskId: taskIdStr } = params
   const submissionId = Number(idStr)
   const taskId = Number(taskIdStr)
 
