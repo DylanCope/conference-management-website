@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import prisma from '../../../../../lib/prisma'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 async function getCurrentUser() {
   const cookieStore = await cookies()

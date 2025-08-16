@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers'
 import prisma from '../../../lib/prisma'
 import ProcessItemsEditor from '../ProcessItemsEditor'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 async function getCurrentUser() {
   const cookieStore = await cookies()
