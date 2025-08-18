@@ -27,6 +27,15 @@ export default async function NewSubmissionPage(){
           ))}
         </select>
 
+  <label style={{display:'block', marginTop:10}}>First authors</label>
+  <input name="firstAuthors" placeholder="Optional" style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
+
+  <label style={{display:'block', marginTop:10}}>Senior authors</label>
+  <input name="seniorAuthors" placeholder="Optional" style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
+
+  <label style={{display:'block', marginTop:10}}>Overleaf link</label>
+  <input name="overleaf" placeholder="https://www.overleaf.com/... (optional)" style={{width:'100%', padding:8, border:'1px solid var(--border)', borderRadius:4, background:'var(--card)', color:'var(--text)'}} />
+
         <div style={{marginTop:12}}>
           <button type="submit" className="btn" disabled={!hasConfs} aria-disabled={!hasConfs}>Create</button>
         </div>
