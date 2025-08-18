@@ -99,17 +99,19 @@ export default async function SubmissionTasksPage({ params }: { params: { id: st
 
   return (
     <main style={{ padding: 24 }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16, background: 'var(--card)' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, justifyContent: 'space-between', marginBottom: 16, background: 'var(--card)', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <form method="post" action="/api/auth/signout">
             <input type="hidden" name="callbackUrl" value="/submissions" />
             <button type="submit" className="btn">Log out</button>
           </form>
           <form method="get" action="/submissions">
-            <button type="submit" className="btn">Back to My Submissions</button>
+            <button type="submit" className="btn">My Submissions</button>
           </form>
         </div>
-  <div style={{ color: 'var(--muted)' }}>{user?.email ?? 'Not signed in'}</div>
+        <form method="get" action="/profile">
+          <button type="submit" className="btn">Profile</button>
+        </form>
       </div>
 
       <h1 style={{ fontSize: 24 }}>Tasks for: {submission.title}</h1>

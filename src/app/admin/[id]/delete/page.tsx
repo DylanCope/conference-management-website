@@ -17,7 +17,7 @@ export default async function DeleteConferencePage({ params }: { params: { id: s
     <main style={{padding:24}}>
       <div style={{
         display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
-        justifyContent:'space-between', marginBottom:16, background:'var(--card)'
+        justifyContent:'space-between', marginBottom:16, background:'var(--card)', flexWrap:'wrap'
       }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
@@ -28,9 +28,9 @@ export default async function DeleteConferencePage({ params }: { params: { id: s
             <button type="submit" className="btn">Manage Conferences</button>
           </form>
         </div>
-        <div style={{color:'#555'}}>
-          {user?.email ?? 'Not signed in'}
-        </div>
+        <form method="get" action="/profile">
+          <button type="submit" className="btn">Profile</button>
+        </form>
       </div>
 
       <h1 style={{fontSize:24}}>Delete Conference</h1>

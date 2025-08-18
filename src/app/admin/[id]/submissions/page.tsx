@@ -69,10 +69,10 @@ export default async function ConferenceSubmissionsPage({ params }: { params: { 
 
   return (
   <main style={{padding:24}}>
-      <div style={{
+    <div style={{
   display:'flex', alignItems:'center', gap:12, padding:'8px 12px', border:'1px solid var(--border)', borderRadius:8,
-  justifyContent:'space-between', marginBottom:16, background:'var(--card)'
-      }}>
+  justifyContent:'space-between', marginBottom:16, background:'var(--card)', flexWrap:'wrap'
+    }}>
         <div style={{display:'flex', alignItems:'center', gap:8}}>
           <form method="post" action="/api/auth/signout">
             <input type="hidden" name="callbackUrl" value="/submissions" />
@@ -82,9 +82,9 @@ export default async function ConferenceSubmissionsPage({ params }: { params: { 
             <button type="submit" className="btn">Manage Conferences</button>
           </form>
         </div>
-  <div style={{color:'var(--muted)'}}>
-          {user?.email ?? 'Not signed in'}
-        </div>
+        <form method="get" action="/profile">
+          <button type="submit" className="btn">Profile</button>
+        </form>
       </div>
 
       <h1 style={{fontSize:24}}>Submissions — {conf.name}</h1>
